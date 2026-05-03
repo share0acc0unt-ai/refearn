@@ -18,26 +18,28 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            # ---- Load Node.js / npm / pm2 into PATH ----
-            # This handles both nvm installs and system-level installs
-            export NVM_DIR="$HOME/.nvm"
-            if [ -s "$NVM_DIR/nvm.sh" ]; then
-              \. "$NVM_DIR/nvm.sh"
-            elif [ -f "/usr/local/bin/node" ]; then
-              export PATH="/usr/local/bin:$PATH"
-            elif [ -f "/usr/bin/node" ]; then
-              export PATH="/usr/bin:$PATH"
+            # ---- Install Node.js if not present ----
+            if ! command -v node &> /dev/null; then
+              echo "Node.js not found. Installing via NodeSource..."
+              curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+              sudo apt-get install -y nodejs
             fi
 
-            # Confirm node/npm/pm2 are visible (helps debug future issues)
             echo "Node: $(node -v)"
             echo "NPM:  $(npm -v)"
-            echo "PM2:  $(pm2 -v)"
+
+            # ---- Install PM2 globally if not present ----
+            if ! command -v pm2 &> /dev/null; then
+              echo "PM2 not found. Installing..."
+              sudo npm install -g pm2
+            fi
+
+            echo "PM2: $(pm2 -v)"
 
             # ---- Repository Setup ----
             cd ~
 
-            # Clone if repo doesn't exist, otherwise pull latest
+            # Clone if repo doesn't exist
             if [ ! -d "refearn/.git" ]; then
               echo "Cloning repository..."
               git clone https://github.com/share0acc0unt-ai/refearn.git
@@ -51,17 +53,19 @@ jobs:
             # ---- Build ----
             cd web
 
-            # Install production dependencies
+            # Install dependencies
             npm ci
 
             # Build the Next.js application
             npm run build
 
             # ---- Process Management ----
-            # Restart if running, otherwise start fresh
-            pm2 describe refearn-web > /dev/null 2>&1 \
-              && pm2 restart refearn-web \
-              || pm2 start npm --name "refearn-web" -- start
+            if pm2 describe refearn-web > /dev/null 2>&1; then
+              pm2 restart refearn-web
+            else
+              pm2 start npm --name "refearn-web" -- start
+            fi
 
-            # Save pm2 process list so it survives reboots
+            # Save pm2 process list so it survives server reboots
             pm2 save
+            sudo env PATH=$PATH:/usr/bin pm2 startup systemd -u $USER --hp $HOME || true
