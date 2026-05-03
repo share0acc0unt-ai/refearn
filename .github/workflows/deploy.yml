@@ -17,29 +17,60 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
+          # Stop immediately if any command fails
+          script_stop: true
           script: |
             # ---- Install Node.js if not present ----
             if ! command -v node &> /dev/null; then
-              echo "Node.js not found. Installing via NodeSource..."
+              echo "Installing Node.js 20..."
               curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
               sudo apt-get install -y nodejs
             fi
-
-            echo "Node: $(node -v)"
-            echo "NPM:  $(npm -v)"
+            echo "Node: $(node -v) | NPM: $(npm -v)"
 
             # ---- Install PM2 globally if not present ----
             if ! command -v pm2 &> /dev/null; then
-              echo "PM2 not found. Installing..."
+              echo "Installing PM2..."
               sudo npm install -g pm2
             fi
 
-            echo "PM2: $(pm2 -v)"
+            # ---- Install & configure nginx if not present ----
+            if ! command -v nginx &> /dev/null; then
+              echo "Installing nginx..."
+              sudo apt-get install -y nginx
+
+              # Proxy port 80 -> Next.js on port 3000
+              sudo bash -c 'cat > /etc/nginx/sites-available/refearn << EOF
+server {
+    listen 80;
+    server_name _;
+
+    location / {
+        proxy_pass http://localhost:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade \$http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_cache_bypass \$http_upgrade;
+    }
+}
+EOF'
+              sudo ln -sf /etc/nginx/sites-available/refearn /etc/nginx/sites-enabled/refearn
+              sudo rm -f /etc/nginx/sites-enabled/default
+              sudo nginx -t && sudo systemctl restart nginx
+              sudo systemctl enable nginx
+            fi
+
+            # ---- Write .env file from GitHub secrets ----
+            cat > ~/refearn/web/.env.local << EOF
+            MONGODB_URI=${{ secrets.MONGODB_URI }}
+            NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}
+            NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }}
+            EOF
 
             # ---- Repository Setup ----
             cd ~
-
-            # Clone if repo doesn't exist
             if [ ! -d "refearn/.git" ]; then
               echo "Cloning repository..."
               git clone https://github.com/share0acc0unt-ai/refearn.git
@@ -50,22 +81,24 @@ jobs:
             git checkout main
             git reset --hard origin/main
 
+            # ---- Write .env AFTER reset (so it doesn't get wiped) ----
+            cat > web/.env.local << EOF
+            MONGODB_URI=${{ secrets.MONGODB_URI }}
+            NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}
+            NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }}
+            EOF
+
             # ---- Build ----
             cd web
-
-            # Install dependencies
             npm ci
-
-            # Build the Next.js application
             npm run build
 
-            # ---- Process Management ----
+            # ---- Restart App ----
             if pm2 describe refearn-web > /dev/null 2>&1; then
               pm2 restart refearn-web
             else
               pm2 start npm --name "refearn-web" -- start
             fi
 
-            # Save pm2 process list so it survives server reboots
             pm2 save
             sudo env PATH=$PATH:/usr/bin pm2 startup systemd -u $USER --hp $HOME || true
