@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Ignore deployment script and seed files
+deploydb.md
+deploy.md
+src/scripts/seed.ts
+src/app/api/seed/route.ts
