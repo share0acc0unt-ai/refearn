@@ -18,35 +18,50 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            # Load environment variables (fixes 'npm: command not found')
-            source ~/.bashrc
-            export NVM_DIR=~/.nvm
-            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            # ---- Load Node.js / npm / pm2 into PATH ----
+            # This handles both nvm installs and system-level installs
+            export NVM_DIR="$HOME/.nvm"
+            if [ -s "$NVM_DIR/nvm.sh" ]; then
+              \. "$NVM_DIR/nvm.sh"
+            elif [ -f "/usr/local/bin/node" ]; then
+              export PATH="/usr/local/bin:$PATH"
+            elif [ -f "/usr/bin/node" ]; then
+              export PATH="/usr/bin:$PATH"
+            fi
 
-            # Go to the user's home directory
+            # Confirm node/npm/pm2 are visible (helps debug future issues)
+            echo "Node: $(node -v)"
+            echo "NPM:  $(npm -v)"
+            echo "PM2:  $(pm2 -v)"
+
+            # ---- Repository Setup ----
             cd ~
-            
-            # If the repository doesn't exist on the server, clone it
-            if [ ! -d "refearn" ]; then
-              echo "Repository not found. Cloning..."
+
+            # Clone if repo doesn't exist, otherwise pull latest
+            if [ ! -d "refearn/.git" ]; then
+              echo "Cloning repository..."
               git clone https://github.com/share0acc0unt-ai/refearn.git
             fi
-            
-            # Navigate to the project directory
+
             cd refearn
-            
-            # Pull the latest changes from GitHub
+            git fetch origin
             git checkout main
-            git pull origin main
-            
-            # Navigate to the web application directory
+            git reset --hard origin/main
+
+            # ---- Build ----
             cd web
-            
-            # Install dependencies
-            npm install
-            
+
+            # Install production dependencies
+            npm ci
+
             # Build the Next.js application
             npm run build
-            
-            # Restart the PM2 process
-            pm2 restart refearn-web || pm2 start npm --name "refearn-web" -- start
+
+            # ---- Process Management ----
+            # Restart if running, otherwise start fresh
+            pm2 describe refearn-web > /dev/null 2>&1 \
+              && pm2 restart refearn-web \
+              || pm2 start npm --name "refearn-web" -- start
+
+            # Save pm2 process list so it survives reboots
+            pm2 save
