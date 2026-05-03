@@ -18,10 +18,25 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            # Navigate to the project directory (Update this path to your actual project folder on EC2)
-            cd /home/ubuntu/refearn
+            # Load environment variables (fixes 'npm: command not found')
+            source ~/.bashrc
+            export NVM_DIR=~/.nvm
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+            # Go to the user's home directory
+            cd ~
+            
+            # If the repository doesn't exist on the server, clone it
+            if [ ! -d "refearn" ]; then
+              echo "Repository not found. Cloning..."
+              git clone https://github.com/share0acc0unt-ai/refearn.git
+            fi
+            
+            # Navigate to the project directory
+            cd refearn
             
             # Pull the latest changes from GitHub
+            git checkout main
             git pull origin main
             
             # Navigate to the web application directory
@@ -33,5 +48,5 @@ jobs:
             # Build the Next.js application
             npm run build
             
-            # Restart the PM2 process (Replace 'refearn-web' with your actual PM2 process name)
+            # Restart the PM2 process
             pm2 restart refearn-web || pm2 start npm --name "refearn-web" -- start
