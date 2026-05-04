@@ -49,12 +49,12 @@ jobs:
             git reset --hard origin/main
 
             # ---- Write .env.local from GitHub secrets ----
-            cat > web/.env.local << EOF
-            MONGODB_URI=${{ secrets.MONGODB_URI }}
-            NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}
-            NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }}
-            EOF
-            echo ".env.local written."
+            # Using printf to avoid heredoc indentation issues
+            printf "MONGODB_URI=%s\nNEXTAUTH_SECRET=%s\nNEXTAUTH_URL=%s\n" \
+              "${{ secrets.MONGODB_URI }}" \
+              "${{ secrets.NEXTAUTH_SECRET }}" \
+              "${{ secrets.NEXTAUTH_URL }}" > ~/refearn/web/.env.local
+            echo ".env.local written with $(wc -l < ~/refearn/web/.env.local) lines."
 
             # ---- Stop existing containers ----
             cd web

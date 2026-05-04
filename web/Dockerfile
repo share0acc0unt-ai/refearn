@@ -5,17 +5,14 @@ COPY package.json package-lock.json ./
 RUN npm ci
 
 # ---- Stage 2: Build ----
+# Server-side env vars (MONGODB_URI etc.) are runtime vars in Next.js
+# so they do NOT need to be baked into the image at build time.
+# They are injected at runtime via docker-compose env_file.
 FROM node:20-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-# Build args are injected at build time from docker-compose
-ARG MONGODB_URI
-ARG NEXTAUTH_SECRET
-ARG NEXTAUTH_URL
-ENV MONGODB_URI=$MONGODB_URI
-ENV NEXTAUTH_SECRET=$NEXTAUTH_SECRET
-ENV NEXTAUTH_URL=$NEXTAUTH_URL
+# Only public/build-time vars go here (none for this app currently)
 RUN npm run build
 
 # ---- Stage 3: Production runner ----

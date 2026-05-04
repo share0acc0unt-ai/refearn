@@ -3,12 +3,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      args:
-        MONGODB_URI: ${MONGODB_URI}
-        NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
-        NEXTAUTH_URL: ${NEXTAUTH_URL}
     container_name: refearn-app
     restart: unless-stopped
+    # .env.local is written on the server by the GitHub Actions workflow
+    # It contains MONGODB_URI, NEXTAUTH_SECRET, NEXTAUTH_URL
     env_file:
       - .env.local
     expose:
