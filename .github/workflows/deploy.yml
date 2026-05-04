@@ -11,65 +11,32 @@ jobs:
     environment: Production
 
     steps:
-      - name: Deploying to EC2 via SSH
+      - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          # Stop immediately if any command fails
+          command_timeout: 30m
           script_stop: true
           script: |
-            # ---- Install Node.js if not present ----
-            if ! command -v node &> /dev/null; then
-              echo "Installing Node.js 20..."
-              curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-              sudo apt-get install -y nodejs
+            # ---- Install Docker if not present ----
+            if ! command -v docker &> /dev/null; then
+              echo "Installing Docker..."
+              curl -fsSL https://get.docker.com | sudo sh
+              sudo usermod -aG docker $USER
+              echo "Docker installed."
             fi
-            echo "Node: $(node -v) | NPM: $(npm -v)"
+            echo "Docker: $(sudo docker --version)"
 
-            # ---- Install PM2 globally if not present ----
-            if ! command -v pm2 &> /dev/null; then
-              echo "Installing PM2..."
-              sudo npm install -g pm2
+            # ---- Ensure Docker Compose plugin is available ----
+            if ! sudo docker compose version &> /dev/null 2>&1; then
+              echo "Installing Docker Compose plugin..."
+              sudo apt-get install -y docker-compose-plugin
             fi
+            echo "Compose: $(sudo docker compose version)"
 
-            # ---- Install & configure nginx if not present ----
-            if ! command -v nginx &> /dev/null; then
-              echo "Installing nginx..."
-              sudo apt-get install -y nginx
-
-              # Proxy port 80 -> Next.js on port 3000
-              sudo bash -c 'cat > /etc/nginx/sites-available/refearn << EOF
-server {
-    listen 80;
-    server_name _;
-
-    location / {
-        proxy_pass http://localhost:3000;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade \$http_upgrade;
-        proxy_set_header Connection "upgrade";
-        proxy_set_header Host \$host;
-        proxy_set_header X-Real-IP \$remote_addr;
-        proxy_cache_bypass \$http_upgrade;
-    }
-}
-EOF'
-              sudo ln -sf /etc/nginx/sites-available/refearn /etc/nginx/sites-enabled/refearn
-              sudo rm -f /etc/nginx/sites-enabled/default
-              sudo nginx -t && sudo systemctl restart nginx
-              sudo systemctl enable nginx
-            fi
-
-            # ---- Write .env file from GitHub secrets ----
-            cat > ~/refearn/web/.env.local << EOF
-            MONGODB_URI=${{ secrets.MONGODB_URI }}
-            NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}
-            NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }}
-            EOF
-
-            # ---- Repository Setup ----
+            # ---- Clone or update repo ----
             cd ~
             if [ ! -d "refearn/.git" ]; then
               echo "Cloning repository..."
@@ -81,24 +48,31 @@ EOF'
             git checkout main
             git reset --hard origin/main
 
-            # ---- Write .env AFTER reset (so it doesn't get wiped) ----
+            # ---- Write .env.local from GitHub secrets ----
             cat > web/.env.local << EOF
             MONGODB_URI=${{ secrets.MONGODB_URI }}
             NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}
             NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }}
             EOF
+            echo ".env.local written."
 
-            # ---- Build ----
+            # ---- Stop existing containers ----
             cd web
-            npm ci
-            npm run build
+            sudo docker compose down || true
 
-            # ---- Restart App ----
-            if pm2 describe refearn-web > /dev/null 2>&1; then
-              pm2 restart refearn-web
-            else
-              pm2 start npm --name "refearn-web" -- start
-            fi
+            # ---- Build and start containers ----
+            sudo docker compose up --build -d
 
-            pm2 save
-            sudo env PATH=$PATH:/usr/bin pm2 startup systemd -u $USER --hp $HOME || true
+            # ---- Show running containers ----
+            echo ""
+            echo "=============================="
+            echo "  Running containers:"
+            echo "=============================="
+            sudo docker compose ps
+
+            # ---- Show app logs (last 30 lines) ----
+            echo ""
+            echo "=============================="
+            echo "  App logs:"
+            echo "=============================="
+            sudo docker compose logs app --tail=30

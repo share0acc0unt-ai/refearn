@@ -1,0 +1,35 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MONGODB_URI: ${MONGODB_URI}
+        NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
+        NEXTAUTH_URL: ${NEXTAUTH_URL}
+    container_name: refearn-app
+    restart: unless-stopped
+    env_file:
+      - .env.local
+    expose:
+      - "3000"
+    networks:
+      - refearn-net
+
+  nginx:
+    image: nginx:alpine
+    container_name: refearn-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - app
+    networks:
+      - refearn-net
+
+networks:
+  refearn-net:
+    driver: bridge
