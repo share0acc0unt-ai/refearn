@@ -5,6 +5,12 @@ import cloudinary from '@/lib/cloudinary';
 
 export async function POST(req: Request) {
     try {
+        // Check configuration
+        if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
+            console.error('Cloudinary environment variables are missing');
+            return NextResponse.json({ error: 'Upload service not configured' }, { status: 500 });
+        }
+
         const cookieStore = await cookies();
         const token = cookieStore.get('token')?.value;
 
