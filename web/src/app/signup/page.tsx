@@ -26,7 +26,7 @@ function SignupContent() {
         countryCode: '+234',
         password: '',
         confirmPassword: '',
-        referralCode: searchParams.get('ref') || '',
+        referralCode: (searchParams.get('ref') || '').toUpperCase(),
         creditCode: '',
         planName: 'lite',
     });

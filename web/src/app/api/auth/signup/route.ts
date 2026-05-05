@@ -53,7 +53,7 @@ export async function POST(req: Request) {
         // Validate Referral Code (Optional)
         let upline = null;
         if (referralCode) {
-            upline = await User.findOne({ referralCode });
+            upline = await User.findOne({ referralCode: referralCode.toUpperCase() });
             if (!upline) {
                 return NextResponse.json({ error: 'Invalid referral code' }, { status: 400 });
             }
