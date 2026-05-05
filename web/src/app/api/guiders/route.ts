@@ -1,49 +1,39 @@
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
-import { User, CreditCode } from '@/lib/models';
+import Guider from '@/models/Guider';
+import { ExchangeRate } from '@/lib/models';
+
+export const dynamic = 'force-dynamic';
 
 // GET - Get guiders ranked by successful transactions
 export async function GET(request: NextRequest) {
     try {
         await dbConnect();
 
-        // Fetch all users with guider role
-        const guiders = await User.find({ role: 'guider' })
-            .select('name whatsapp profilePhoto createdAt')
-            .lean();
+        // Fetch exchange rate to calculate dynamic values
+        const rateDoc = await ExchangeRate.findOne({});
+        const rate = rateDoc ? rateDoc.nairaPerDollar : 1500;
 
-        // For each guider, count their successful transactions (used credit codes)
-        const guidersWithStats = await Promise.all(
-            guiders.map(async (guider) => {
-                const successfulTransactions = await CreditCode.countDocuments({
-                    generatedBy: guider._id,
-                    status: 'USED'
-                });
+        // Fetch all guiders from the Guider collection
+        const guiders = await Guider.find({}).lean();
 
-                // Get total value of used codes
-                const usedCodes = await CreditCode.find({
-                    generatedBy: guider._id,
-                    status: 'USED'
-                });
-                const totalValue = usedCodes.reduce((sum, code) => sum + code.amount, 0);
-
-                return {
-                    _id: guider._id,
-                    name: guider.name,
-                    whatsapp: guider.whatsapp,
-                    profilePhoto: guider.profilePhoto,
-                    createdAt: guider.createdAt,
-                    successfulTransactions,
-                    totalValue
-                };
-            })
-        );
+        // Format guiders to match the frontend expectations
+        const formattedGuiders = guiders.map((guider: any) => ({
+            _id: guider._id,
+            name: guider.name,
+            whatsapp: guider.whatsapp || guider.phoneNumber,
+            profilePhoto: guider.avatar,
+            createdAt: guider.createdAt,
+            successfulTransactions: guider.totalTransactions || 0,
+            // Calculate total value dynamically using the DB rate (assuming average 10 USD per transaction)
+            totalValue: (guider.totalTransactions || 0) * (rate * 10)
+        }));
 
         // Sort by successful transactions (descending)
-        guidersWithStats.sort((a, b) => b.successfulTransactions - a.successfulTransactions);
+        formattedGuiders.sort((a, b) => b.successfulTransactions - a.successfulTransactions);
 
         return NextResponse.json({
-            guiders: guidersWithStats
+            guiders: formattedGuiders
         });
 
     } catch (error: any) {

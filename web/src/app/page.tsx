@@ -17,17 +17,37 @@ export default function Home() {
                 <div className="flex flex-col gap-6 px-4 py-10 @[480px]:gap-8 @[864px]:flex-row">
                   <div className="flex flex-col gap-6 @[480px]:min-w-[400px] @[480px]:gap-8 @[864px]:justify-center">
                     <div className="flex flex-col gap-2 text-left">
-                      <h1 className="text-white text-4xl font-black leading-tight tracking-[-0.033em] @[480px]:text-5xl @[480px]:font-black @[480px]:leading-tight @[480px]:tracking-[-0.033em]">Monetize Your Influence. Amplify Your Reach.</h1>
-                      <h2 className="text-white/80 text-sm font-normal leading-normal @[480px]:text-base @[480px]:font-normal @[480px]:leading-normal">Paypulse is a comprehensive referral and task-based earning platform. Earn commissions, complete tasks, purchase subscription plans, and manage credits all in one place.</h2>
+                      <h1 className="text-white text-4xl font-black leading-tight tracking-[-0.033em] @[480px]:text-5xl @[480px]:font-black @[480px]:leading-tight @[480px]:tracking-[-0.033em]">Advertise on real people's screen</h1>
+                      <h2 className="text-white/80 text-sm font-normal leading-normal @[480px]:text-base @[480px]:font-normal @[480px]:leading-normal">Facts: People only buy from people they know, like or trust. Reach millions of potential customers, Join Paypulse and start advertising today.</h2>
                     </div>
                     <Link href="/signup">
                       <button className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 @[480px]:h-12 @[480px]:px-5 bg-primary text-[#112215] text-sm font-bold leading-normal tracking-[0.015em] @[480px]:text-base @[480px]:font-bold @[480px]:leading-normal @[480px]:tracking-[0.015em]">
-                        <span className="truncate">Started Earning</span>
+                        <span className="truncate">Start Advertising</span>
                         <ArrowRightIcon className="ml-2 h-4 w-4" />
                       </button>
                     </Link>
                   </div>
                   <div className="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-lg @[480px]:h-auto @[480px]:min-w-[400px] @[864px]:w-full" style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuDGzRhSZb0nacjg7bG8maCBXACYRYf6uL9B3ITYRg5erQMMWEGU72ZB_AS11CZjeRgi8Fl0MEg48Gux_1pWilJ65cS8JhBb_0PTmvV8YmGAPvMcD7CGFzGDwQLlLs0H6VYnHTYfY0dbSc4BggdQ3326nUy2cgfWpFo0vz2vPl6rZNDgR5nI6nbPQAaL1rAjJ8vUUbOHiUMB8_4OFU7Nss001InbxdfhSX4prp3UA_VqqAgKBTHh4aV6EwfaRAf14jtNQLZgQrTtoXKF')" }}></div>
+                </div>
+              </div>
+
+              {/* Earner CTA Section */}
+              <div className="px-4">
+                <div className="bg-primary/10 border border-primary/20 rounded-2xl p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-8 shadow-[0_0_40px_rgba(46,176,91,0.1)]">
+                  <div className="flex flex-col gap-4 max-w-2xl">
+                    <h2 className="text-white text-2xl md:text-3xl font-bold leading-tight">
+                      Make Money Every Day
+                    </h2>
+                    <p className="text-[#92c9a0] text-base md:text-lg font-medium leading-relaxed">
+                      Earn Up To $5 USD Per task, Earn commissions, Turn your connections into cash and earn a 50% on Referral Bonus. Join our network and start building your financial future today.
+                    </p>
+                  </div>
+                  <Link href="/signup" className="shrink-0 w-full md:w-auto">
+                    <button className="flex w-full md:w-auto cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-8 bg-[#2eb05b] text-[#112215] text-base font-bold leading-normal tracking-[0.015em] hover:bg-[#3cd172] transition-colors shadow-lg shadow-[#2eb05b]/20">
+                      <span className="truncate">Start Earning Now</span>
+                      <ArrowRightIcon className="ml-2 h-5 w-5" />
+                    </button>
+                  </Link>
                 </div>
               </div>
               {/* FeatureSection */}

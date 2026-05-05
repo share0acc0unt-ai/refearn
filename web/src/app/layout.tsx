@@ -11,7 +11,7 @@ const manrope = Manrope({
 
 export const metadata: Metadata = {
   title: "Paypulse - Monetize Your Influence",
-  description: "Earn commissions, complete tasks, and grow your earnings with Paypulse.",
+  description: "Earn Up To $5 USD Per task, Earn commissions, Turn your connections into cash and earn a 50% on Referral Bonus. Join our network and start building your financial future today. Start Earning Now",
 };
 
 export default function RootLayout({
