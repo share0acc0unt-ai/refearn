@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { formatUSD } from "@/lib/currency";
+import CurrencyCalculator from "@/components/CurrencyCalculator";
 
 interface Balances {
     referralBalance: number;
@@ -308,17 +309,7 @@ export default function WalletPage() {
                                 </div>
 
                                 <div>
-                                    <label className="text-white text-sm font-medium mb-2 block">Amount</label>
-                                    <input
-                                        type="number"
-                                        value={withdrawAmount}
-                                        onChange={(e) => setWithdrawAmount(e.target.value)}
-                                        className="w-full rounded-lg border border-[#32673f] bg-[#102215] px-4 py-3 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-primary"
-                                        placeholder="Enter amount (min ₦5,000)"
-                                        min="5000"
-                                        max={(balanceType === 'referral' ? balances?.referralBalance : balances?.taskBalance) || 0}
-                                        required
-                                    />
+                                    <CurrencyCalculator onAmountChange={setWithdrawAmount} />
                                     <p className="text-white/50 text-xs mt-1">
                                         Available: ₦{(balanceType === 'referral' ? balances?.referralBalance : balances?.taskBalance)?.toLocaleString() || 0}
                                     </p>

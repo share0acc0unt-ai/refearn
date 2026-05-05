@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { formatUSD } from "@/lib/currency";
 import { useRouter } from "next/navigation";
+import CurrencyCalculator from "@/components/CurrencyCalculator";
 
 export default function GenerateCodePage() {
     const router = useRouter();
@@ -16,6 +17,10 @@ export default function GenerateCodePage() {
         amount: '',
         purpose: 'signup',
     });
+
+    const setAmount = (amount: string) => {
+        setFormData({ ...formData, amount });
+    };
 
     useEffect(() => {
         fetchUser();
@@ -54,7 +59,6 @@ export default function GenerateCodePage() {
 
         if (user && amount > user.credits) {
             setError(`Insufficient credits. Available: ${formatUSD(user.credits)}`);
-            return;
             return;
         }
 
@@ -167,17 +171,7 @@ export default function GenerateCodePage() {
                         </div>
 
                         <div>
-                            <label className="text-white text-sm font-medium mb-2 block">Amount ($)</label>
-                            <input
-                                type="number"
-                                value={formData.amount}
-                                onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
-                                className="w-full rounded-lg border border-[#32673f] bg-[#102215] px-4 py-3 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-primary"
-                                placeholder="Enter amount"
-                                min="1"
-                                step="1"
-                                required
-                            />
+                            <CurrencyCalculator onAmountChange={setAmount} />
                             <p className="text-white/50 text-xs mt-2">
                                 This amount will be deducted from your credits
                             </p>

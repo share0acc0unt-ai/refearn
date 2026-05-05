@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { formatUSD } from "@/lib/currency";
 import { useRouter } from "next/navigation";
 import { CheckIcon, CopyIcon, ArrowRightIcon } from "lucide-react";
+import CurrencyCalculator from "@/components/CurrencyCalculator";
 
 export default function PurchaseCreditsPage() {
     const router = useRouter();
@@ -219,18 +220,7 @@ export default function PurchaseCreditsPage() {
                                 )}
 
                                 <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-                                    <div className="flex flex-col gap-2">
-                                        <label className="text-white text-sm font-medium">Amount ($)</label>
-                                        <input
-                                            type="number"
-                                            value={amount}
-                                            onChange={(e) => setAmount(e.target.value)}
-                                            className="w-full rounded-lg border border-[#32673f] bg-[#102215] px-4 py-3 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-primary"
-                                            placeholder="Enter amount sent"
-                                            min="1"
-                                            required
-                                        />
-                                    </div>
+                                    <CurrencyCalculator onAmountChange={setAmount} />
 
                                     <div className="flex flex-col gap-2">
                                         <label className="text-white text-sm font-medium">Transaction Hash</label>

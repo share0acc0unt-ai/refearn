@@ -250,12 +250,17 @@ export default function AdvertisePage() {
 
                                     {/* Budget Display */}
                                     {formData.targetedReach && (
-                                        <div className="flex flex-col gap-2 p-4 bg-[#102215] border border-[#32673f] rounded-lg">
-                                            <div className="flex justify-between items-center">
-                                                <span className="text-white/80 text-sm">Estimated Budget:</span>
-                                                <span className="text-white text-lg font-bold">{formatUSD(bill)}</span>
+                                        <div className="flex flex-col gap-3 p-6 bg-[#102215] border-2 border-primary rounded-xl shadow-[0_0_20px_rgba(146,201,160,0.2)]">
+                                            <div className="flex flex-col items-center justify-center text-center">
+                                                <p className="text-primary/70 text-xs uppercase tracking-widest font-bold mb-1">Total Budget</p>
+                                                <div className="flex flex-col gap-1">
+                                                    <p className="text-white text-4xl font-black">{formatUSD(bill)}</p>
+                                                    <p className="text-[#92c9a0] text-xl font-bold">₦{bill.toLocaleString()}</p>
+                                                </div>
                                             </div>
-                                            <p className="text-primary text-xs">Minimum: 10 credits</p>
+                                            <div className="flex justify-between items-center pt-3 border-t border-white/10 mt-1">
+                                                <span className="text-white/40 text-[10px]">Minimum requirement: 10 credits</span>
+                                            </div>
                                         </div>
                                     )}
 
