@@ -10,6 +10,7 @@ interface Transaction {
     balanceType: string;
     description: string;
     status: string;
+    hash?: string;
     createdAt: string;
     userId: {
         name: string;
@@ -374,14 +375,14 @@ export default function AdminTransactionsPage() {
                                                     <span className="text-white uppercase">{selectedTransaction.metadata.network}</span>
                                                 </div>
                                             )}
-                                            {selectedTransaction.metadata.transactionHash && (
+                                            {(selectedTransaction.metadata.transactionHash || selectedTransaction.hash) && (
                                                 <div>
                                                     <p className="text-white/60 text-sm mb-1">Transaction Hash</p>
                                                     <p className="text-white font-mono text-sm bg-[#193320] p-2 rounded break-all mb-2">
-                                                        {selectedTransaction.metadata.transactionHash}
+                                                        {selectedTransaction.metadata.transactionHash || selectedTransaction.hash}
                                                     </p>
                                                     <a
-                                                        href={`https://tronscan.org/#/transaction/${selectedTransaction.metadata.transactionHash}`}
+                                                        href={`https://tronscan.org/#/transaction/${selectedTransaction.metadata.transactionHash || selectedTransaction.hash}`}
                                                         target="_blank"
                                                         rel="noopener noreferrer"
                                                         className="inline-flex items-center gap-2 bg-blue-500/20 text-blue-400 px-4 py-2 rounded-lg font-bold hover:bg-blue-500/30 transition-colors"
