@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
         }
 
         const body = await request.json();
-        const { amount, transactionHash } = body;
+        const { amount, transactionHash, network, usdtAddress } = body;
 
         // Validation
         if (!amount || amount <= 0) {
@@ -58,6 +58,8 @@ export async function POST(request: NextRequest) {
             hash: transactionHash,
             metadata: {
                 method: 'USDT',
+                network: network,
+                usdtAddress: usdtAddress,
             },
         });
 

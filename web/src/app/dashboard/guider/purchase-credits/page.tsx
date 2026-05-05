@@ -91,6 +91,8 @@ export default function PurchaseCreditsPage() {
                 body: JSON.stringify({
                     amount: parseFloat(amount),
                     transactionHash: txHash,
+                    network: network,
+                    usdtAddress: usdtWalletAddress
                 }),
             });
 
