@@ -3,6 +3,8 @@ import dbConnect from '@/lib/db';
 import { User, AdCampaign } from '@/lib/models';
 import { verifyJwt } from '@/lib/auth';
 
+export const dynamic = 'force-dynamic';
+
 // GET - Fetch all campaigns for admin with payment details
 export async function GET(request: NextRequest) {
     try {

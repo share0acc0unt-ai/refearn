@@ -19,8 +19,8 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 # Build-time public vars (only NEXT_PUBLIC_ prefix are embedded at build time)
-# None required for PayPulse — all secrets are runtime-only.
-RUN npm run build
+# Provide dummy MONGODB_URI to satisfy build-time static optimization checks
+RUN MONGODB_URI=mongodb://localhost:27017/dummy npm run build
 
 # ---- Stage 3: Production runner ----
 FROM node:20-alpine AS runner
