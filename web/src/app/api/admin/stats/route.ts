@@ -4,6 +4,8 @@ import { User, Task, Transaction } from '@/lib/models';
 import { verifyJwt } from '@/lib/auth';
 import { cookies } from 'next/headers';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(req: Request) {
     try {
         await dbConnect();

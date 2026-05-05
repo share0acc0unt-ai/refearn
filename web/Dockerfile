@@ -19,8 +19,11 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 # Build-time public vars (only NEXT_PUBLIC_ prefix are embedded at build time)
-# Provide dummy MONGODB_URI to satisfy build-time static optimization checks
-RUN MONGODB_URI=mongodb://localhost:27017/dummy npm run build
+# Provide dummy vars to satisfy build-time static optimization checks
+RUN MONGODB_URI=mongodb://localhost:27017/dummy \
+    JWT_SECRET=dummy_secret_for_build \
+    NEXT_PUBLIC_APP_URL=http://localhost:3000 \
+    npm run build
 
 # ---- Stage 3: Production runner ----
 FROM node:20-alpine AS runner
