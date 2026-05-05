@@ -29,7 +29,7 @@ export default function PurchaseCreditsPage() {
                 if (response.ok) {
                     const data = await response.json();
                     const configs = data.configs || [];
-                    const usdtConfig = configs.find((c: any) => c.key === 'usdt_address');
+                    const usdtConfig = configs.find((c: any) => c.key === 'usdt_wallet_address');
                     const networkConfig = configs.find((c: any) => c.key === 'usdt_network');
 
                     if (usdtConfig) setUsdtWalletAddress(usdtConfig.value);
