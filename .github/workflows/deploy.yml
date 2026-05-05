@@ -49,6 +49,7 @@ jobs:
             git reset --hard origin/main
 
             # ---- Write .env.local from GitHub secrets ----
+            # All secrets injected at runtime — nothing is baked into the Docker image.
             printf "MONGODB_URI=%s\nJWT_SECRET=%s\nNEXT_PUBLIC_APP_URL=%s\nCLOUDINARY_CLOUD_NAME=%s\nCLOUDINARY_API_KEY=%s\nCLOUDINARY_API_SECRET=%s\n" \
               "${{ secrets.MONGODB_URI }}" \
               "${{ secrets.JWT_SECRET }}" \
@@ -72,9 +73,9 @@ jobs:
             echo "=============================="
             sudo docker compose ps
 
-            # ---- Show app logs (last 30 lines) ----
+            # ---- Show app logs (last 50 lines) ----
             echo ""
             echo "=============================="
             echo "  App logs:"
             echo "=============================="
-            sudo docker compose logs app --tail=30
+            sudo docker compose logs app --tail=50

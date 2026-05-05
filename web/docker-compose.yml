@@ -3,20 +3,20 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: refearn-app
+    container_name: paypulse-app
     restart: unless-stopped
-    # .env.local is written on the server by the GitHub Actions workflow
-    # It contains MONGODB_URI, NEXTAUTH_SECRET, NEXTAUTH_URL
+    # .env.local is written on the server by the GitHub Actions workflow.
+    # It contains MONGODB_URI, JWT_SECRET, CLOUDINARY_*, NEXT_PUBLIC_APP_URL
     env_file:
       - .env.local
     expose:
       - "3000"
     networks:
-      - refearn-net
+      - paypulse-net
 
   nginx:
     image: nginx:alpine
-    container_name: refearn-nginx
+    container_name: paypulse-nginx
     restart: unless-stopped
     ports:
       - "80:80"
@@ -26,8 +26,8 @@ services:
     depends_on:
       - app
     networks:
-      - refearn-net
+      - paypulse-net
 
 networks:
-  refearn-net:
+  paypulse-net:
     driver: bridge

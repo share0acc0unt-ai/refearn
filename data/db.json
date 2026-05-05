@@ -1,0 +1,272 @@
+{
+  "users": [],
+  "campaigns": [],
+  "payments": [],
+  "guiders": [
+    {
+      "id": "2aa7a470e65e603e3ece7d72",
+      "name": "Sarah Johnson",
+      "phoneNumber": "+1234567890",
+      "whatsapp": "+1234567890",
+      "telegram": "@sarahjohnson",
+      "avatar": "https://i.pravatar.cc/150?img=1",
+      "rating": 4.9,
+      "totalTransactions": 156,
+      "responseTime": "< 5 min",
+      "languages": [
+        "English",
+        "Spanish"
+      ],
+      "isOnline": true,
+      "isVerified": true,
+      "createdAt": "2025-11-30T14:47:35.065Z",
+      "updatedAt": "2025-11-30T14:47:35.065Z"
+    },
+    {
+      "id": "ac23e7c0598adbfe953f640f",
+      "name": "Michael Chen",
+      "phoneNumber": "+1234567891",
+      "whatsapp": "+1234567891",
+      "telegram": "@michaelchen",
+      "avatar": "https://i.pravatar.cc/150?img=12",
+      "rating": 4.8,
+      "totalTransactions": 203,
+      "responseTime": "< 10 min",
+      "languages": [
+        "English",
+        "Mandarin"
+      ],
+      "isOnline": false,
+      "isVerified": true,
+      "createdAt": "2025-11-30T14:47:35.066Z",
+      "updatedAt": "2025-11-30T14:47:35.066Z"
+    },
+    {
+      "id": "6c07527cb4eefef2be2ac739",
+      "name": "Emma Williams",
+      "phoneNumber": "+1234567892",
+      "whatsapp": "+1234567892",
+      "telegram": "@emmawilliams",
+      "avatar": "https://i.pravatar.cc/150?img=5",
+      "rating": 5,
+      "totalTransactions": 89,
+      "responseTime": "< 3 min",
+      "languages": [
+        "English",
+        "French"
+      ],
+      "isOnline": true,
+      "isVerified": true,
+      "createdAt": "2025-11-30T14:47:35.066Z",
+      "updatedAt": "2025-11-30T14:47:35.066Z"
+    },
+    {
+      "id": "dc1d8e3fc58ee14cc72e7223",
+      "name": "David Martinez",
+      "phoneNumber": "+1234567893",
+      "whatsapp": "+1234567893",
+      "telegram": null,
+      "avatar": "https://i.pravatar.cc/150?img=13",
+      "rating": 4.7,
+      "totalTransactions": 134,
+      "responseTime": "< 15 min",
+      "languages": [
+        "English",
+        "Spanish",
+        "Portuguese"
+      ],
+      "isOnline": true,
+      "isVerified": true,
+      "createdAt": "2025-11-30T14:47:35.066Z",
+      "updatedAt": "2025-11-30T14:47:35.066Z"
+    },
+    {
+      "id": "f04b119b03a51b495a568543",
+      "name": "Lisa Anderson",
+      "phoneNumber": "+1234567894",
+      "whatsapp": "+1234567894",
+      "telegram": "@lisaanderson",
+      "avatar": "https://i.pravatar.cc/150?img=9",
+      "rating": 4.9,
+      "totalTransactions": 178,
+      "responseTime": "< 5 min",
+      "languages": [
+        "English"
+      ],
+      "isOnline": false,
+      "isVerified": true,
+      "createdAt": "2025-11-30T14:47:35.067Z",
+      "updatedAt": "2025-11-30T14:47:35.067Z"
+    },
+    {
+      "id": "5737aa5c13486eb76cd1e211",
+      "name": "James Taylor",
+      "phoneNumber": "+1234567895",
+      "whatsapp": "+1234567895",
+      "telegram": "@jamestaylor",
+      "avatar": "https://i.pravatar.cc/150?img=14",
+      "rating": 4.6,
+      "totalTransactions": 92,
+      "responseTime": "< 20 min",
+      "languages": [
+        "English",
+        "German"
+      ],
+      "isOnline": true,
+      "isVerified": true,
+      "createdAt": "2025-11-30T14:47:35.067Z",
+      "updatedAt": "2025-11-30T14:47:35.067Z"
+    }
+  ],
+  "creditCodes": [
+    {
+      "id": "8197067279f7ba79bb6c9a05",
+      "code": "CREDIT-C123AB72",
+      "amount": 50000,
+      "guiderId": null,
+      "adNumber": null,
+      "status": "ACTIVE",
+      "usedBy": null,
+      "usedAt": null,
+      "expiresAt": null,
+      "createdAt": "2025-11-30T14:47:35.068Z",
+      "updatedAt": "2025-11-30T14:47:35.068Z"
+    },
+    {
+      "id": "0d62a9048838f466aadce8b1",
+      "code": "CREDIT-B7E4E75A",
+      "amount": 60000,
+      "guiderId": null,
+      "adNumber": null,
+      "status": "ACTIVE",
+      "usedBy": null,
+      "usedAt": null,
+      "expiresAt": null,
+      "createdAt": "2025-11-30T14:47:35.069Z",
+      "updatedAt": "2025-11-30T14:47:35.069Z"
+    },
+    {
+      "id": "71033b62a4750e1beed7fc5e",
+      "code": "CREDIT-ADEF216F",
+      "amount": 70000,
+      "guiderId": null,
+      "adNumber": null,
+      "status": "ACTIVE",
+      "usedBy": null,
+      "usedAt": null,
+      "expiresAt": null,
+      "createdAt": "2025-11-30T14:47:35.070Z",
+      "updatedAt": "2025-11-30T14:47:35.070Z"
+    },
+    {
+      "id": "33023ba400266cc316409e6e",
+      "code": "CREDIT-5A42E6BA",
+      "amount": 80000,
+      "guiderId": null,
+      "adNumber": null,
+      "status": "ACTIVE",
+      "usedBy": null,
+      "usedAt": null,
+      "expiresAt": null,
+      "createdAt": "2025-11-30T14:47:35.071Z",
+      "updatedAt": "2025-11-30T14:47:35.071Z"
+    },
+    {
+      "id": "37a247ae740665b7ccc95b4c",
+      "code": "CREDIT-18EC070D",
+      "amount": 90000,
+      "guiderId": null,
+      "adNumber": null,
+      "status": "ACTIVE",
+      "usedBy": null,
+      "usedAt": null,
+      "expiresAt": null,
+      "createdAt": "2025-11-30T14:47:35.072Z",
+      "updatedAt": "2025-11-30T14:47:35.072Z"
+    },
+    {
+      "id": "9b332193bacc7170898c4a29",
+      "code": "CREDIT-6EA83065",
+      "amount": 100000,
+      "guiderId": null,
+      "adNumber": null,
+      "status": "ACTIVE",
+      "usedBy": null,
+      "usedAt": null,
+      "expiresAt": null,
+      "createdAt": "2025-11-30T14:47:35.072Z",
+      "updatedAt": "2025-11-30T14:47:35.072Z"
+    },
+    {
+      "id": "fef1a335a8d9b474e5f47c6c",
+      "code": "CREDIT-DFB77311",
+      "amount": 110000,
+      "guiderId": null,
+      "adNumber": null,
+      "status": "ACTIVE",
+      "usedBy": null,
+      "usedAt": null,
+      "expiresAt": null,
+      "createdAt": "2025-11-30T14:47:35.073Z",
+      "updatedAt": "2025-11-30T14:47:35.073Z"
+    },
+    {
+      "id": "f131e11b32a9eddbeeb141bd",
+      "code": "CREDIT-D8FDD9D4",
+      "amount": 120000,
+      "guiderId": null,
+      "adNumber": null,
+      "status": "ACTIVE",
+      "usedBy": null,
+      "usedAt": null,
+      "expiresAt": null,
+      "createdAt": "2025-11-30T14:47:35.074Z",
+      "updatedAt": "2025-11-30T14:47:35.074Z"
+    },
+    {
+      "id": "224d8e7a0a718f1c4834e992",
+      "code": "CREDIT-15C87A99",
+      "amount": 130000,
+      "guiderId": null,
+      "adNumber": null,
+      "status": "ACTIVE",
+      "usedBy": null,
+      "usedAt": null,
+      "expiresAt": null,
+      "createdAt": "2025-11-30T14:47:35.074Z",
+      "updatedAt": "2025-11-30T14:47:35.074Z"
+    },
+    {
+      "id": "d99c89e2fbae7bf92be06404",
+      "code": "CREDIT-A1DF3F0F",
+      "amount": 140000,
+      "guiderId": null,
+      "adNumber": null,
+      "status": "ACTIVE",
+      "usedBy": null,
+      "usedAt": null,
+      "expiresAt": null,
+      "createdAt": "2025-11-30T14:47:35.075Z",
+      "updatedAt": "2025-11-30T14:47:35.075Z"
+    }
+  ],
+  "analytics": [],
+  "paymentConfig": [
+    {
+      "id": "34affa5dc0fac29fe9f0fae5",
+      "key": "usdt_wallet_address",
+      "value": "TXYZabc123456789DefGhiJklMnoPqrStuVwx",
+      "description": "USDT TRC20 wallet address for receiving payments",
+      "createdAt": "2025-11-30T14:47:35.065Z",
+      "updatedAt": "2025-11-30T14:47:35.065Z"
+    },
+    {
+      "id": "284d67f5cd64e1113a5e3fa3",
+      "key": "usdt_network",
+      "value": "TRC20",
+      "description": "USDT network chain (TRC20 on TRON blockchain)",
+      "createdAt": "2025-11-30T14:47:35.065Z",
+      "updatedAt": "2025-11-30T14:47:35.065Z"
+    }
+  ]
+}
