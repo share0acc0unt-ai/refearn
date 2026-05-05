@@ -92,6 +92,15 @@ export async function PUT(req: Request) {
         if (action === 'approve') {
             transaction.status = 'completed';
 
+            // Update user balance for credit purchases
+            if (transaction.type === 'credit_purchase') {
+                const user = await User.findById(transaction.userId);
+                if (user) {
+                    user.credits = (user.credits || 0) + transaction.amount;
+                    await user.save();
+                }
+            }
+
             // Update the withdrawal record status if this is a withdrawal transaction
             if (transaction.type === 'withdrawal' && transaction.metadata?.get('withdrawalId')) {
                 const Withdrawal = (await import('@/models/Withdrawal')).default;
