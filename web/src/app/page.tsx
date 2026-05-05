@@ -57,18 +57,19 @@ export default function Home() {
                   <p className="text-white/80 text-base font-normal leading-normal max-w-[720px]">Discover the core pillars of the Paypulse platform designed to help you succeed.</p>
                 </div>
                 <div className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-4 p-0">
-                  <div className="flex flex-1 gap-4 rounded-lg border border-[#32673f] bg-[#193320] p-6 flex-col">
-                    <div className="text-primary"><span className="material-symbols-outlined text-3xl">group_add</span></div>
-                    <div className="flex flex-col gap-1">
-                      <h2 className="text-white text-lg font-bold leading-tight">Earn with Referrals</h2>
-                      <p className="text-[#92c9a0] text-sm font-normal leading-normal">Earn passive income through our powerful multi-level referral system.</p>
-                    </div>
-                  </div>
+                  
                   <div className="flex flex-1 gap-4 rounded-lg border border-[#32673f] bg-[#193320] p-6 flex-col">
                     <div className="text-primary"><span className="material-symbols-outlined text-3xl">assignment_turned_in</span></div>
                     <div className="flex flex-col gap-1">
                       <h2 className="text-white text-lg font-bold leading-tight">Complete Tasks for Cash</h2>
                       <p className="text-[#92c9a0] text-sm font-normal leading-normal">Get paid for completing simple online tasks from our diverse marketplace.</p>
+                    </div>
+                  </div>
+                  <div className="flex flex-1 gap-4 rounded-lg border border-[#32673f] bg-[#193320] p-6 flex-col">
+                    <div className="text-primary"><span className="material-symbols-outlined text-3xl">group_add</span></div>
+                    <div className="flex flex-col gap-1">
+                      <h2 className="text-white text-lg font-bold leading-tight">Earn with Referrals</h2>
+                      <p className="text-[#92c9a0] text-sm font-normal leading-normal">Earn passive income through our powerful multi-level referral system.</p>
                     </div>
                   </div>
                   <div className="flex flex-1 gap-4 rounded-lg border border-[#32673f] bg-[#193320] p-6 flex-col">
