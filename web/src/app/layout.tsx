@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Manrope } from "next/font/google";
 import "./globals.css";
-import { AuthProvider } from "@/context/AuthContext";
+import ChatSupport from "@/components/ChatSupport";
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -10,8 +10,8 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "Earn Up To $5 USD Per task and 50% on Referral Bonus",
-  description: "Join our network and start building your financial future today.",
+  title: "Paypulse - Monetize Your Influence",
+  description: "Earn commissions, complete tasks, and grow your earnings with Paypulse.",
 };
 
 export default function RootLayout({
@@ -21,12 +21,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+      </head>
       <body
-        className={`${manrope.variable} antialiased font-display`}
+        className={`${manrope.variable} antialiased font-display bg-background text-foreground`}
       >
-        <AuthProvider>
-          {children}
-        </AuthProvider>
+        {children}
+        <ChatSupport />
       </body>
     </html>
   );

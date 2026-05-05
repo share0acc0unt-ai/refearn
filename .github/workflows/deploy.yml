@@ -1,4 +1,4 @@
-name: Deploy to AWS EC2
+name: Deploy PayPulse to AWS EC2
 
 on:
   push:
@@ -49,11 +49,13 @@ jobs:
             git reset --hard origin/main
 
             # ---- Write .env.local from GitHub secrets ----
-            # Using printf to avoid heredoc indentation issues
-            printf "MONGODB_URI=%s\nNEXTAUTH_SECRET=%s\nNEXTAUTH_URL=%s\n" \
+            printf "MONGODB_URI=%s\nJWT_SECRET=%s\nNEXT_PUBLIC_APP_URL=%s\nCLOUDINARY_CLOUD_NAME=%s\nCLOUDINARY_API_KEY=%s\nCLOUDINARY_API_SECRET=%s\n" \
               "${{ secrets.MONGODB_URI }}" \
-              "${{ secrets.NEXTAUTH_SECRET }}" \
-              "${{ secrets.NEXTAUTH_URL }}" > ~/refearn/web/.env.local
+              "${{ secrets.JWT_SECRET }}" \
+              "${{ secrets.NEXT_PUBLIC_APP_URL }}" \
+              "${{ secrets.CLOUDINARY_CLOUD_NAME }}" \
+              "${{ secrets.CLOUDINARY_API_KEY }}" \
+              "${{ secrets.CLOUDINARY_API_SECRET }}" > ~/refearn/web/.env.local
             echo ".env.local written with $(wc -l < ~/refearn/web/.env.local) lines."
 
             # ---- Stop existing containers ----

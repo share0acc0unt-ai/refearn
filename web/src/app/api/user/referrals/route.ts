@@ -1,38 +1,50 @@
-import { NextResponse } from "next/server";
-import dbConnect from "@/lib/db";
-import { User } from "@/lib/models";
-import jwt from "jsonwebtoken";
+import { NextResponse } from 'next/server';
+import dbConnect from '@/lib/db';
+import { User } from '@/lib/models';
+import { verifyJwt } from '@/lib/auth';
+import { cookies } from 'next/headers';
 
-const JWT_SECRET = process.env.JWT_SECRET || "super-secret-key";
-
-async function verifyUser(req: Request) {
-    const authHeader = req.headers.get("Authorization");
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-        return null;
-    }
-    const token = authHeader.split(" ")[1];
-    try {
-        const decoded: any = jwt.verify(token, JWT_SECRET);
-        return decoded;
-    } catch (error) {
-        return null;
-    }
-}
-
-export async function GET(req: Request) {
+export async function GET(request: Request) {
     try {
         await dbConnect();
-        const decoded = await verifyUser(req);
-        if (!decoded) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        const cookieStore = await cookies();
+        const token = cookieStore.get('token')?.value;
+
+        if (!token) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        const referrals = await User.find({ uplinerId: decoded.userId })
-            .select("name username role joinedAt isSuspended")
-            .sort({ createdAt: -1 });
+        const decoded = verifyJwt(token);
+        if (!decoded || !decoded.userId) {
+            return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
+        }
 
-        return NextResponse.json({ referrals });
+        // Get pagination params
+        const { searchParams } = new URL(request.url);
+        const page = parseInt(searchParams.get('page') || '1');
+        const limit = parseInt(searchParams.get('limit') || '20');
+        const skip = (page - 1) * limit;
+
+        // Get total count
+        const totalReferrals = await User.countDocuments({ uplinerId: decoded.userId });
+
+        // Get user's referrals (users who have this user as their upline)
+        const referrals = await User.find({ uplinerId: decoded.userId })
+            .select('name username whatsapp role referralBalance taskBalance createdAt')
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit);
+
+        const currentUser = await User.findById(decoded.userId);
+
+        return NextResponse.json({
+            referrals,
+            referralCode: currentUser?.referralCode,
+            totalReferrals,
+            totalPages: Math.ceil(totalReferrals / limit),
+        });
     } catch (error) {
-        return NextResponse.json({ error: "Failed to fetch referrals" }, { status: 500 });
+        console.error('Referrals API error:', error);
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }

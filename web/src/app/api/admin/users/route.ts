@@ -1,104 +1,126 @@
-import { NextResponse } from "next/server";
-import dbConnect from "@/lib/db";
-import { User } from "@/lib/models";
-import jwt from "jsonwebtoken";
-
-const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key";
-
-// Helper to verify admin
-async function verifyAdmin(req: Request) {
-    const authHeader = req.headers.get("Authorization");
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-        return null;
-    }
-    const token = authHeader.split(" ")[1];
-    try {
-        const decoded: any = jwt.verify(token, JWT_SECRET);
-        if (decoded.role !== "admin") return null;
-        return decoded;
-    } catch (error) {
-        return null;
-    }
-}
+import { NextResponse } from 'next/server';
+import dbConnect from '@/lib/db';
+import { User } from '@/lib/models';
+import { verifyJwt } from '@/lib/auth';
+import { cookies } from 'next/headers';
 
 export async function GET(req: Request) {
     try {
         await dbConnect();
-        const admin = await verifyAdmin(req);
-        if (!admin) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        const cookieStore = await cookies();
+        const token = cookieStore.get('token')?.value;
+
+        if (!token) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
+
+        const decoded = verifyJwt(token);
+        if (!decoded || !decoded.userId) {
+            return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
+        }
+
+
+        const currentUser = await User.findById(decoded.userId);
+        if (!currentUser || !['ADMIN', 'SUPERADMIN'].includes(currentUser.role?.toUpperCase())) {
+            return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+        }
+
 
         const { searchParams } = new URL(req.url);
-        const page = parseInt(searchParams.get("page") || "1");
-        const limit = parseInt(searchParams.get("limit") || "10");
-        const role = searchParams.get("role");
-        const search = searchParams.get("search");
+        const role = searchParams.get('role');
+        const search = searchParams.get('search');
+        const page = parseInt(searchParams.get('page') || '1');
+        const limit = parseInt(searchParams.get('limit') || '20');
 
-        const query: any = {};
-
-        if (role && role !== "all") {
-            query.role = role;
+        let query: any = {};
+        if (role && role !== 'all') {
+            query.role = role.toUpperCase();
         }
-
         if (search) {
             query.$or = [
-                { name: { $regex: search, $options: "i" } },
-                { username: { $regex: search, $options: "i" } },
-                { whatsapp: { $regex: search, $options: "i" } }
+                { name: { $regex: search, $options: 'i' } },
+                { email: { $regex: search, $options: 'i' } },
             ];
         }
 
+        const total = await User.countDocuments(query);
         const skip = (page - 1) * limit;
-
         const users = await User.find(query)
-            .select("-password")
+            .select('-password')
             .sort({ createdAt: -1 })
             .skip(skip)
             .limit(limit);
 
-        const total = await User.countDocuments(query);
-
         return NextResponse.json({
             users,
-            pagination: {
-                total,
-                page,
-                limit,
-                pages: Math.ceil(total / limit)
-            }
-        });
+            total,
+            page,
+            totalPages: Math.ceil(total / limit)
+        }, { status: 200 });
+
     } catch (error) {
-        return NextResponse.json({ error: "Failed to fetch users" }, { status: 500 });
+        console.error('Admin Users API error:', error);
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }
 
 export async function PUT(req: Request) {
     try {
         await dbConnect();
-        const admin = await verifyAdmin(req);
-        if (!admin) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        const cookieStore = await cookies();
+        const token = cookieStore.get('token')?.value;
+
+        if (!token) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        const { userId, action, role } = await req.json();
-
-        if (action === "toggle_suspension") {
-            const user = await User.findById(userId);
-            if (!user) return NextResponse.json({ error: "User not found" }, { status: 404 });
-
-            user.isSuspended = !user.isSuspended;
-            await user.save();
-            return NextResponse.json({ message: "User status updated", user });
+        const decoded = verifyJwt(token);
+        if (!decoded || !decoded.userId) {
+            return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
         }
 
-        if (action === "update_role") {
-            const user = await User.findByIdAndUpdate(userId, { role }, { new: true }).select("-password");
-            return NextResponse.json({ message: "User role updated", user });
+
+        const currentUser = await User.findById(decoded.userId);
+        if (!currentUser || !['ADMIN', 'SUPERADMIN'].includes(currentUser.role?.toUpperCase())) {
+            return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
         }
 
-        return NextResponse.json({ error: "Invalid action" }, { status: 400 });
+        const body = await req.json();
+        const { userId, action, role } = body;
+
+        if (!userId || !action) {
+            return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+        }
+
+        const targetUser = await User.findById(userId);
+        if (!targetUser) {
+            return NextResponse.json({ error: 'User not found' }, { status: 404 });
+        }
+
+        // Only SuperAdmin can modify other Admins/SuperAdmins
+        if (['ADMIN', 'SUPERADMIN'].includes(targetUser.role) && currentUser.role !== 'SUPERADMIN') {
+            return NextResponse.json({ error: 'Forbidden: Cannot modify other admins' }, { status: 403 });
+        }
+
+        if (action === 'update_role') {
+            if (currentUser.role !== 'SUPERADMIN') {
+                return NextResponse.json({ error: 'Forbidden: Only SuperAdmin can change roles' }, { status: 403 });
+            }
+            targetUser.role = role;
+        } else if (action === 'suspend') {
+            targetUser.isSuspended = true;
+        } else if (action === 'unsuspend') {
+            targetUser.isSuspended = false;
+        } else {
+            return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
+        }
+
+        await targetUser.save();
+
+        return NextResponse.json({ message: 'User updated successfully', user: targetUser }, { status: 200 });
+
     } catch (error) {
-        return NextResponse.json({ error: "Failed to update user" }, { status: 500 });
+        console.error('Admin Users API error:', error);
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }

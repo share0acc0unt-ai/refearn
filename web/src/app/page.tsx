@@ -1,188 +1,200 @@
+import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
-import { CheckCircle, PersonStanding, Share, Wallet } from "lucide-react";
+import { LandingPageNavbar } from "@/components/LandingPageNavbar";
 
-export default function LandingPage() {
+export default function Home() {
   return (
-    <div className="flex flex-col min-h-screen bg-background-dark text-white">
-      {/* Header */}
-      <header className="flex items-center justify-between px-4 sm:px-6 md:px-10 py-3 border-b border-white/10">
-        <div className="flex items-center gap-4 text-white">
-          <div className="size-6 text-primary">
-            <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-              <path d="M36.7273 44C33.9891 44 31.6043 39.8386 30.3636 33.69C29.123 39.8386 26.7382 44 24 44C21.2618 44 18.877 39.8386 17.6364 33.69C16.3957 39.8386 14.0109 44 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 4C14.0109 4 16.3957 8.16144 17.6364 14.31C18.877 8.16144 21.2618 4 24 4C26.7382 4 29.123 8.16144 30.3636 14.31C31.6043 8.16144 33.9891 4 36.7273 4C40.7439 4 44 12.9543 44 24C44 35.0457 40.7439 44 36.7273 44Z" fill="currentColor"></path>
-            </svg>
+    <div className="relative flex h-auto min-h-screen w-full flex-col bg-background-light dark:bg-background-dark group/design-root overflow-x-hidden font-display">
+      <div className="layout-container flex h-full grow flex-col">
+        <div className="px-4 md:px-10 lg:px-20 xl:px-40 flex flex-1 justify-center py-5">
+          <div className="layout-content-container flex flex-col max-w-[960px] flex-1">
+            {/* TopNavBar */}
+            {/* TopNavBar */}
+            <LandingPageNavbar />
+            <main className="flex flex-col gap-16 md:gap-20">
+              {/* HeroSection */}
+              <div className="@container mt-10">
+                <div className="flex flex-col gap-6 px-4 py-10 @[480px]:gap-8 @[864px]:flex-row">
+                  <div className="flex flex-col gap-6 @[480px]:min-w-[400px] @[480px]:gap-8 @[864px]:justify-center">
+                    <div className="flex flex-col gap-2 text-left">
+                      <h1 className="text-white text-4xl font-black leading-tight tracking-[-0.033em] @[480px]:text-5xl @[480px]:font-black @[480px]:leading-tight @[480px]:tracking-[-0.033em]">Monetize Your Influence. Amplify Your Reach.</h1>
+                      <h2 className="text-white/80 text-sm font-normal leading-normal @[480px]:text-base @[480px]:font-normal @[480px]:leading-normal">Paypulse is a comprehensive referral and task-based earning platform. Earn commissions, complete tasks, purchase subscription plans, and manage credits all in one place.</h2>
+                    </div>
+                    <Link href="/signup">
+                      <button className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 @[480px]:h-12 @[480px]:px-5 bg-primary text-[#112215] text-sm font-bold leading-normal tracking-[0.015em] @[480px]:text-base @[480px]:font-bold @[480px]:leading-normal @[480px]:tracking-[0.015em]">
+                        <span className="truncate">Started Earning</span>
+                        <ArrowRightIcon className="ml-2 h-4 w-4" />
+                      </button>
+                    </Link>
+                  </div>
+                  <div className="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-lg @[480px]:h-auto @[480px]:min-w-[400px] @[864px]:w-full" style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuDGzRhSZb0nacjg7bG8maCBXACYRYf6uL9B3ITYRg5erQMMWEGU72ZB_AS11CZjeRgi8Fl0MEg48Gux_1pWilJ65cS8JhBb_0PTmvV8YmGAPvMcD7CGFzGDwQLlLs0H6VYnHTYfY0dbSc4BggdQ3326nUy2cgfWpFo0vz2vPl6rZNDgR5nI6nbPQAaL1rAjJ8vUUbOHiUMB8_4OFU7Nss001InbxdfhSX4prp3UA_VqqAgKBTHh4aV6EwfaRAf14jtNQLZgQrTtoXKF')" }}></div>
+                </div>
+              </div>
+              {/* FeatureSection */}
+              <div id="features" className="flex flex-col gap-10 px-4 py-10 @container">
+                <div className="flex flex-col gap-4 text-center items-center">
+                  <h1 className="text-white tracking-light text-[32px] font-bold leading-tight @[480px]:text-4xl @[480px]:font-black @[480px]:leading-tight @[480px]:tracking-[-0.033em] max-w-[720px]">Unlock Your Earning Potential</h1>
+                  <p className="text-white/80 text-base font-normal leading-normal max-w-[720px]">Discover the core pillars of the Paypulse platform designed to help you succeed.</p>
+                </div>
+                <div className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-4 p-0">
+                  <div className="flex flex-1 gap-4 rounded-lg border border-[#32673f] bg-[#193320] p-6 flex-col">
+                    <div className="text-primary"><span className="material-symbols-outlined text-3xl">group_add</span></div>
+                    <div className="flex flex-col gap-1">
+                      <h2 className="text-white text-lg font-bold leading-tight">Earn with Referrals</h2>
+                      <p className="text-[#92c9a0] text-sm font-normal leading-normal">Earn passive income through our powerful multi-level referral system.</p>
+                    </div>
+                  </div>
+                  <div className="flex flex-1 gap-4 rounded-lg border border-[#32673f] bg-[#193320] p-6 flex-col">
+                    <div className="text-primary"><span className="material-symbols-outlined text-3xl">assignment_turned_in</span></div>
+                    <div className="flex flex-col gap-1">
+                      <h2 className="text-white text-lg font-bold leading-tight">Complete Tasks for Cash</h2>
+                      <p className="text-[#92c9a0] text-sm font-normal leading-normal">Get paid for completing simple online tasks from our diverse marketplace.</p>
+                    </div>
+                  </div>
+                  <div className="flex flex-1 gap-4 rounded-lg border border-[#32673f] bg-[#193320] p-6 flex-col">
+                    <div className="text-primary"><span className="material-symbols-outlined text-3xl">ads_click</span></div>
+                    <div className="flex flex-col gap-1">
+                      <h2 className="text-white text-lg font-bold leading-tight">Create Ad Campaigns</h2>
+                      <p className="text-[#92c9a0] text-sm font-normal leading-normal">Launch targeted advertising campaigns in minutes to reach your ideal audience.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {/* How It Works Section */}
+              <div className="flex flex-col gap-4">
+                <h2 className="text-white text-center text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">How It Works</h2>
+                <div className="grid grid-cols-[40px_1fr] gap-x-2 px-4">
+                  <div className="flex flex-col items-center gap-1 pt-3">
+                    <div className="text-primary"><span className="material-symbols-outlined text-3xl">how_to_reg</span></div>
+                    <div className="w-[1.5px] bg-[#32673f] h-2 grow"></div>
+                  </div>
+                  <div className="flex flex-1 flex-col py-3">
+                    <p className="text-white text-lg font-medium leading-normal">Sign Up for Free</p>
+                    <p className="text-[#92c9a0] text-base font-normal leading-normal">Create your account in just a few clicks and get instant access to the platform.</p>
+                  </div>
+                  <div className="flex flex-col items-center gap-1">
+                    <div className="w-[1.5px] bg-[#32673f] h-2"></div>
+                    <div className="text-primary"><span className="material-symbols-outlined text-3xl">trending_up</span></div>
+                    <div className="w-[1.5px] bg-[#32673f] h-2 grow"></div>
+                  </div>
+                  <div className="flex flex-1 flex-col py-3">
+                    <p className="text-white text-lg font-medium leading-normal">Earn &amp; Advertise</p>
+                    <p className="text-[#92c9a0] text-base font-normal leading-normal">Start referring users and completing tasks, or launch your first ad campaign.</p>
+                  </div>
+                  <div className="flex flex-col items-center gap-1 pb-3">
+                    <div className="w-[1.5px] bg-[#32673f] h-2"></div>
+                    <div className="text-primary"><span className="material-symbols-outlined text-3xl">payments</span></div>
+                  </div>
+                  <div className="flex flex-1 flex-col py-3">
+                    <p className="text-white text-lg font-medium leading-normal">Get Paid Securely</p>
+                    <p className="text-[#92c9a0] text-base font-normal leading-normal">Easily withdraw your earnings or reinvest your credits for further growth.</p>
+                  </div>
+                </div>
+              </div>
+              {/* Pricing Table */}
+              <div id="pricing" className="flex flex-col gap-10 px-4 py-10 @container">
+                <div className="flex flex-col gap-4 text-center items-center">
+                  <h1 className="text-white tracking-light text-[32px] font-bold leading-tight @[480px]:text-4xl @[480px]:font-black @[480px]:leading-tight @[480px]:tracking-[-0.033em] max-w-[720px]">Choose Your Plan</h1>
+                  <p className="text-white/80 text-base font-normal leading-normal max-w-[720px]">Start for free or unlock powerful features with our Pro and Business plans.</p>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {/* Free Plan */}
+                  <div className="flex flex-col gap-6 rounded-lg border border-[#32673f] bg-[#193320] p-6">
+                    <div className="flex flex-col gap-2">
+                      <h3 className="text-white text-xl font-bold">Lite</h3>
+                      <p className="text-white text-4xl font-bold">$12.00<span className="text-base font-normal text-white/70">/month</span></p>
+                      <p className="text-[#92c9a0] text-sm">Perfect for getting started and exploring the platform.</p>
+                    </div>
+                    <div className="flex flex-col gap-3">
+                      <div className="flex items-center gap-2"><span className="material-symbols-outlined text-primary">check_circle</span><span className="text-white/90 text-sm">Up to 50 referrals</span></div>
+                      <div className="flex items-center gap-2"><span className="material-symbols-outlined text-primary">check_circle</span><span className="text-white/90 text-sm">Basic dashboard</span></div>
+                      <div className="flex items-center gap-2"><span className="material-symbols-outlined text-primary">check_circle</span><span className="text-white/90 text-sm">Standard Support</span></div>
+                    </div>
+                    <Link href="/signup" className="mt-auto">
+                      <button className="flex w-full min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-[#23482c] text-white text-sm font-bold leading-normal tracking-[0.015em]"><span className="truncate">Choose Plan</span></button>
+                    </Link>
+                  </div>
+                  {/* Pro Plan */}
+                  <div className="flex flex-col gap-6 rounded-lg border-2 border-primary bg-[#193320] p-6 relative">
+                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-[#112215] text-xs font-bold px-3 py-1 rounded-full">MOST POPULAR</div>
+                    <div className="flex flex-col gap-2">
+                      <h3 className="text-white text-xl font-bold">Pro</h3>
+                      <p className="text-white text-4xl font-bold">$21.00<span className="text-base font-normal text-white/70">/month</span></p>
+                      <p className="text-[#92c9a0] text-sm">Ideal for serious earners and advertisers looking to scale.</p>
+                    </div>
+                    <div className="flex flex-col gap-3">
+                      <div className="flex items-center gap-2"><span className="material-symbols-outlined text-primary">check_circle</span><span className="text-white/90 text-sm">Unlimited referrals</span></div>
+                      <div className="flex items-center gap-2"><span className="material-symbols-outlined text-primary">check_circle</span><span className="text-white/90 text-sm">Advanced dashboard</span></div>
+                      <div className="flex items-center gap-2"><span className="material-symbols-outlined text-primary">check_circle</span><span className="text-white/90 text-sm">Marketing toolkit</span></div>
+                      <div className="flex items-center gap-2"><span className="material-symbols-outlined text-primary">check_circle</span><span className="text-white/90 text-sm">Priority Support</span></div>
+                    </div>
+                    <Link href="/signup" className="mt-auto">
+                      <button className="flex w-full min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-[#112215] text-sm font-bold leading-normal tracking-[0.015em]"><span className="truncate">Choose Plan</span></button>
+                    </Link>
+                  </div>
+                  {/* Premium Plan */}
+                  <div className="flex flex-col gap-6 rounded-lg border border-[#32673f] bg-[#193320] p-6">
+                    <div className="flex flex-col gap-2">
+                      <h3 className="text-white text-xl font-bold">Premium</h3>
+                      <p className="text-white text-4xl font-bold">$50.00<span className="text-base font-normal text-white/70">/month</span></p>
+                      <p className="text-[#92c9a0] text-sm">For agencies and businesses with high-volume needs.</p>
+                    </div>
+                    <div className="flex flex-col gap-3">
+                      <div className="flex items-center gap-2"><span className="material-symbols-outlined text-primary">check_circle</span><span className="text-white/90 text-sm">Unlimited referrals</span></div>
+                      <div className="flex items-center gap-2"><span className="material-symbols-outlined text-primary">check_circle</span><span className="text-white/90 text-sm">Premium features</span></div>
+                      <div className="flex items-center gap-2"><span className="material-symbols-outlined text-primary">check_circle</span><span className="text-white/90 text-sm">Exclusive webinars</span></div>
+                      <div className="flex items-center gap-2"><span className="material-symbols-outlined text-primary">check_circle</span><span className="text-white/90 text-sm">Dedicated Support</span></div>
+                    </div>
+                    <Link href="/signup" className="mt-auto">
+                      <button className="flex w-full min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-[#23482c] text-white text-sm font-bold leading-normal tracking-[0.015em]"><span className="truncate">Choose Plan</span></button>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+              {/* Testimonial Section */}
+              <div className="flex flex-col gap-10 px-4 py-10 @container">
+                <div className="flex flex-col gap-4 text-center items-center">
+                  <h1 className="text-white tracking-light text-[32px] font-bold leading-tight @[480px]:text-4xl @[480px]:font-black @[480px]:leading-tight @[480px]:tracking-[-0.033em] max-w-[720px]">What Our Users Say</h1>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="flex flex-col gap-4 rounded-lg border border-[#32673f] bg-[#193320] p-6">
+                    <p className="text-white/80 italic">"Paypulse has completely changed how I approach side hustles. The referral system is incredibly rewarding, and I started seeing results almost immediately."</p>
+                    <div className="flex items-center gap-3 mt-2">
+                      <img className="w-12 h-12 rounded-full object-cover" alt="Photo of Sarah L." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBhwRwB8qLrCCYtgdjxbj2ENAsorMVZw0_yi1nmpku19WoCJnkYG64Bdh-mTXbFuAARGajMvTeptKJXWhfbU_vgI0M70EZwUiuLXifsr1fI5aWooSy9RioczUjh13ja4g1ueneWNkI_DKMBcZR-Jj0RpMdtBe7xiUpK9WgOYjRlvQ6mZ4sEDYYQPGu0vQ5NYPtVGd5qhmoFz-6_UT4z5ycr0abXs9EQvkRFMSI0sll4oL-mtUC6fpNNcdnVnrOjC5xW9qTDKOzHuApu" />
+                      <div>
+                        <p className="text-white font-bold">Sarah L.</p>
+                        <p className="text-[#92c9a0] text-sm">Content Creator</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-4 rounded-lg border border-[#32673f] bg-[#193320] p-6">
+                    <p className="text-white/80 italic">"As a small business owner, the ad campaign tool is a lifesaver. It's so easy to use and I've reached a whole new customer base without breaking the bank."</p>
+                    <div className="flex items-center gap-3 mt-2">
+                      <img className="w-12 h-12 rounded-full object-cover" alt="Photo of Mark T." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAnKRo6iF_LXXAB13sHH3tpfk8nQ6reRW-dzP4hUfR56pO64JD8DjLgcE1ISvLt3qmOF8t9dEguykt-WLu1JZUoDe3cQZhjun0UqHJOLZzLT8zmXld0roBajyf7ulUDvvU8KZZYuAk4ywLiuYlmmQ8h2lDXVESW6B4YbZXsKT5xvGtUmRGqPIkI6n5oR9TztPtukY8HRbWEVNTMZLTaDi05UaitSGZ0pdNTy9LoHu8u9KSYAhFt3s-58cqfIY4Z67EYUWnQn4aVJVMk" />
+                      <div>
+                        <p className="text-white font-bold">Mark T.</p>
+                        <p className="text-[#92c9a0] text-sm">E-commerce Store Owner</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {/* Footer */}
+              <footer className="border-t border-solid border-white/10 dark:border-b-[#23482c] px-4 md:px-10 py-10">
+                <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+                  <div className="flex items-center gap-2">
+                    <p className="text-white/60 text-sm">© 2024 Paypulse. All rights reserved.</p>
+                  </div>
+                  <div className="flex items-center gap-6">
+                    <Link className="text-white/80 text-sm hover:text-primary" href="#">Terms of Service</Link>
+                    <Link className="text-white/80 text-sm hover:text-primary" href="#">Privacy Policy</Link>
+                  </div>
+                </div>
+              </footer>
+            </main>
           </div>
-          <h2 className="text-lg font-bold leading-tight tracking-[-0.015em]">Paypulse</h2>
         </div>
-        <div className="hidden md:flex flex-1 justify-end gap-8 items-center">
-          <div className="flex items-center gap-9">
-            <a className="text-sm font-medium hover:text-primary transition-colors" href="#features">How it Works</a>
-            <a className="text-sm font-medium hover:text-primary transition-colors" href="#plans">Pricing</a>
-            <a className="text-sm font-medium hover:text-primary transition-colors" href="#footer">Contact</a>
-          </div>
-          <Link href="/login" className="flex items-center justify-center rounded-lg h-10 px-4 bg-primary text-background-dark text-sm font-bold hover:opacity-90 transition-opacity">
-            Sign In
-          </Link>
-        </div>
-      </header>
-
-      <main className="flex-1">
-        {/* Hero Section */}
-        <section className="py-10 md:py-20 px-4">
-          <div className="max-w-[960px] mx-auto">
-            <div className="flex min-h-[480px] flex-col gap-6 bg-cover bg-center bg-no-repeat rounded-lg items-center justify-center p-4 text-center"
-              style={{ backgroundImage: 'linear-gradient(rgba(16, 34, 25, 0.8) 0%, rgba(16, 34, 25, 0.95) 100%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuCNbUWEIJmOR2aGupgy7iQy7wtKdK_4SlIe8ECbm0gLGmL9bK0rjYRU4U4kVVOs6iD3UXHtGYyiEeQCWWRCYV9KcwqJXaWxHzMms4E-c1PTmG9UAHmnkmZcaAGj7Et3Aul_VdtLdqWxciMKRb9knn3zYVet4sdcLAhIkQVfuhDfOmTi0mTrWKCgg5xrV-QoI0MoEuZP3G_1gwl-wuuif0ohymjs-up6fHu31zE--jsJ1aP2MG30QRcH15ilj2udDeEJLXEZhZeo4Lir")' }}>
-              <div className="flex flex-col gap-4 max-w-2xl">
-                <h1 className="text-white text-4xl md:text-6xl font-black leading-tight tracking-[-0.033em]">
-                  Earn Up To <span className="text-primary">$5  USD</span> Per task  and 50% on Referral Bonus
-                </h1>
-                <h2 className="text-white/80 text-base md:text-lg font-normal">
-                  Join our network and start building your financial future today. Turn your connections into cash.
-                </h2>
-              </div>
-              <Link href="/signup?plan=lite" className="flex items-center justify-center rounded-lg h-12 px-6 bg-primary text-background-dark text-base md:text-lg font-bold hover:opacity-90 transition-opacity">
-                Start Earning Now
-              </Link>
-            </div>
-          </div>
-        </section>
-
-        {/* Features Section */}
-        <section id="features" className="py-10 px-4">
-          <div className="max-w-[960px] mx-auto flex flex-col gap-10">
-            <div className="text-center flex flex-col gap-4 items-center">
-              <h2 className="text-3xl md:text-4xl font-bold leading-tight tracking-[-0.033em]">Multiple Ways to Earn</h2>
-              <p className="text-white/70 text-base max-w-[720px]">
-                Our platform offers diverse opportunities. Get rewarded for referrals and for your time.
-              </p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="flex flex-col gap-4 rounded-lg border border-[#3b5447] bg-[#1c2721] p-6">
-                <PersonStanding className="text-primary size-10" />
-                <div>
-                  <h3 className="text-lg font-bold">1. Sign Up</h3>
-                  <p className="text-sm text-[#9db9ab]">Choose the plan that's right for you and create your account in minutes.</p>
-                </div>
-              </div>
-              <div className="flex flex-col gap-4 rounded-lg border border-[#3b5447] bg-[#1c2721] p-6">
-                <Share className="text-primary size-10" />
-                <div>
-                  <h3 className="text-lg font-bold">2. Refer Friends</h3>
-                  <p className="text-sm text-[#9db9ab]">Share your unique referral link with your network through social media.</p>
-                </div>
-              </div>
-              <div className="flex flex-col gap-4 rounded-lg border border-[#3b5447] bg-[#1c2721] p-6">
-                <Wallet className="text-primary size-10" />
-                <div>
-                  <h3 className="text-lg font-bold">3. Earn 50%</h3>
-                  <p className="text-sm text-[#9db9ab]">Receive a 50% commission for every single person who signs up using your link.</p>
-                </div>
-              </div>
-              <div className="flex flex-col gap-4 rounded-lg border border-[#3b5447] bg-[#1c2721] p-6">
-                <Wallet className="text-primary size-10" />
-                <div>
-                  <h3 className="text-lg font-bold">4. Earn From Tasks</h3>
-                  <p className="text-sm text-[#9db9ab]">Earn Up To $5 USD Per task.</p>
-                </div>
-              </div>
-              <div className="flex flex-col gap-4 rounded-lg border border-[#3b5447] bg-[#1c2721] p-6">
-                <Wallet className="text-primary size-10" />
-                <div>
-                  <h3 className="text-lg font-bold">5. Place ADS for people and earn commission</h3>
-                  <p className="text-sm text-[#9db9ab]">Earn 10% commission from every Advert placed by you.</p>
-                </div>
-              </div>
-              <div className="flex flex-col gap-4 rounded-lg border border-[#3b5447] bg-[#1c2721] p-6">
-                <Wallet className="text-primary size-10" />
-                <div>
-                  <h3 className="text-lg font-bold">6. Earn from Guiders Credits</h3>
-                  <p className="text-sm text-[#9db9ab]">Become a guider and earn 10% commission from every Credit purchased by users.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Plans Section */}
-        <section id="plans" className="py-10 px-4">
-          <div className="max-w-[960px] mx-auto">
-            <h2 className="text-3xl font-bold text-center mb-8">Choose Your Plan</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {/* Lite Plan */}
-              <div className="flex flex-col gap-6 rounded-lg border border-[#3b5447] bg-[#1c2721] p-6">
-                <div>
-                  <h3 className="text-lg font-bold">Lite</h3>
-                  <p className="flex items-baseline gap-1.5">
-                    <span className="text-5xl font-black">$12</span>
-                    <span className="text-sm opacity-70">per signup</span>
-                  </p>
-                </div>
-                <div className="space-y-3">
-                  <div className="flex gap-3 items-center text-sm"><CheckCircle className="text-primary size-5" /> Basic Dashboard Access</div>
-                  <div className="flex gap-3 items-center text-sm"><CheckCircle className="text-primary size-5" /> Standard Support</div>
-                  <div className="flex gap-3 items-center text-sm"><CheckCircle className="text-primary size-5" /> Up to 50 Referrals</div>
-                </div>
-                <Link href="/signup?plan=lite" className="mt-auto w-full h-12 flex items-center justify-center rounded-lg bg-[#283930] font-bold hover:bg-[#3b5447] transition-colors">Choose Plan</Link>
-              </div>
-
-              {/* Pro Plan */}
-              <div className="flex flex-col gap-6 rounded-lg border-2 border-primary bg-[#1c2721] p-6 relative">
-                <span className="absolute -top-4 right-6 bg-primary text-background-dark text-xs font-bold px-3 py-1 rounded-full">Most Popular</span>
-                <div>
-                  <h3 className="text-lg font-bold">Pro</h3>
-                  <p className="flex items-baseline gap-1.5">
-                    <span className="text-5xl font-black">$21</span>
-                    <span className="text-sm opacity-70">per signup</span>
-                  </p>
-                </div>
-                <div className="space-y-3">
-                  <div className="flex gap-3 items-center text-sm"><CheckCircle className="text-primary size-5" /> Advanced Dashboard</div>
-                  <div className="flex gap-3 items-center text-sm"><CheckCircle className="text-primary size-5" /> Fast Payout</div>
-                  <div className="flex gap-3 items-center text-sm"><CheckCircle className="text-primary size-5" />High pay per task</div>
-                  <div className="flex gap-3 items-center text-sm"><CheckCircle className="text-primary size-5" /> Marketing Toolkit</div>
-                </div>
-                <Link href="/signup?plan=pro" className="mt-auto w-full h-12 flex items-center justify-center rounded-lg bg-primary text-background-dark font-bold hover:opacity-90 transition-opacity">Choose Plan</Link>
-              </div>
-
-              {/* Premium Plan */}
-              <div className="flex flex-col gap-6 rounded-lg border border-[#3b5447] bg-[#1c2721] p-6">
-                <div>
-                  <h3 className="text-lg font-bold">Premium</h3>
-                  <p className="flex items-baseline gap-1.5">
-                    <span className="text-5xl font-black">$50</span>
-                    <span className="text-sm opacity-70">per signup</span>
-                  </p>
-                </div>
-                <div className="space-y-3">
-                  <div className="flex gap-3 items-center text-sm"><CheckCircle className="text-primary size-5" /> Premium Dashboard</div>
-                  <div className="flex gap-3 items-center text-sm"><CheckCircle className="text-primary size-5" /> Fastest Payout</div>
-                  <div className="flex gap-3 items-center text-sm"><CheckCircle className="text-primary size-5" /> Highest pay per task</div>
-                  <div className="flex gap-3 items-center text-sm"><CheckCircle className="text-primary size-5" /> Early Access to new features</div>
-                </div>
-                <Link href="/signup?plan=premium" className="mt-auto w-full h-12 flex items-center justify-center rounded-lg bg-[#283930] font-bold hover:bg-[#3b5447] transition-colors">Choose Plan</Link>
-              </div>
-            </div>
-          </div>
-        </section>
-      </main>
-
-      <footer id="footer" className="border-t border-white/10 mt-10 py-8">
-        <div className="max-w-[960px] mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="flex items-center gap-3">
-            <div className="size-5 text-primary">
-              <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-                <path d="M36.7273 44C33.9891 44 31.6043 39.8386 30.3636 33.69C29.123 39.8386 26.7382 44 24 44C21.2618 44 18.877 39.8386 17.6364 33.69C16.3957 39.8386 14.0109 44 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 4C14.0109 4 16.3957 8.16144 17.6364 14.31C18.877 8.16144 21.2618 4 24 4C26.7382 4 29.123 8.16144 30.3636 14.31C31.6043 8.16144 33.9891 4 36.7273 4C40.7439 4 44 12.9543 44 24C44 35.0457 40.7439 44 36.7273 44Z" fill="currentColor"></path>
-              </svg>
-            </div>
-            <p className="text-sm opacity-70">© 2024 Paypulse. All rights reserved.</p>
-          </div>
-          <div className="flex gap-6">
-            <a href="#" className="text-sm opacity-70 hover:text-primary">Terms</a>
-            <a href="#" className="text-sm opacity-70 hover:text-primary">Privacy</a>
-            <a href="#" className="text-sm opacity-70 hover:text-primary">Contact</a>
-          </div>
-        </div>
-      </footer>
+      </div>
     </div>
   );
 }

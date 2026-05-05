@@ -1,79 +1,165 @@
-import { NextResponse } from "next/server";
-import dbConnect from "@/lib/db";
-import { User, OtpToken, Plan } from "@/lib/models";
-import bcrypt from "bcryptjs";
+import { NextResponse } from 'next/server';
+import dbConnect from '@/lib/db';
+import { User, Plan, CreditCode } from '@/lib/models';
+import bcrypt from 'bcryptjs';
+import { signJwt } from '@/lib/auth';
 
 export async function POST(req: Request) {
     try {
         await dbConnect();
-        const { name, username, whatsapp, email, password, referralCode, otpCode, plan } = await req.json();
+        const body = await req.json();
+        const { name, username, whatsapp, password, referralCode, creditCode, planName, country, countryCode } = body;
 
-        // 1. Validate Input
-        if (!name || !username || !whatsapp || !password || !referralCode || !otpCode || !plan) {
-            return NextResponse.json({ error: "All required fields (Name, Username, WhatsApp, Password, Referral Code, OTP, Plan) must be filled" }, { status: 400 });
+        // Validation
+        if (!name || !username || !whatsapp || !password || !creditCode || !planName || !country || !countryCode) {
+            return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
         }
 
-        // 2. Check if User already exists
-        const existingUser = await User.findOne({
-            $or: [{ username }, { whatsapp }, { email: email || "null_email" }]
-        });
-
-        if (existingUser) {
-            if (existingUser.username === username) return NextResponse.json({ error: "Username already taken" }, { status: 400 });
-            if (existingUser.whatsapp === whatsapp) return NextResponse.json({ error: "WhatsApp number already registered" }, { status: 400 });
-            if (email && existingUser.email === email) return NextResponse.json({ error: "Email already registered" }, { status: 400 });
+        // Check if username already exists
+        const existingUsername = await User.findOne({ username });
+        if (existingUsername) {
+            return NextResponse.json({ error: 'Username already taken' }, { status: 400 });
         }
 
-        // 3. Validate OTP
-        const otp = await OtpToken.findOne({ code: otpCode, status: "unused" });
-        if (!otp) {
-            return NextResponse.json({ error: "Invalid or used OTP Code" }, { status: 400 });
+        // Check if whatsapp already exists
+        const existingWhatsapp = await User.findOne({ whatsapp });
+        if (existingWhatsapp) {
+            return NextResponse.json({ error: 'WhatsApp number already registered' }, { status: 400 });
         }
 
-        // 4. Validate Upliner
-        const upliner = await User.findOne({ username: referralCode });
-        if (!upliner) {
-            return NextResponse.json({ error: "Invalid Referral Code (Upliner Username not found)" }, { status: 400 });
+        // Validate Plan
+        const plan = await Plan.findOne({ name: planName, isActive: true });
+        if (!plan) {
+            return NextResponse.json({ error: 'Invalid plan selected' }, { status: 400 });
         }
 
-        // 5. Validate Plan from DB
-        const selectedPlan = await Plan.findOne({ name: plan, isActive: true });
-        if (!selectedPlan) {
-            return NextResponse.json({ error: "Invalid plan selected" }, { status: 400 });
+        // Validate Credit Code
+        const credit = await CreditCode.findOne({ code: creditCode.toUpperCase() });
+        if (!credit) {
+            return NextResponse.json({ error: 'Invalid credit code' }, { status: 400 });
         }
 
-        // 6. Create User
+        if (credit.status !== 'ACTIVE') {
+            return NextResponse.json({ error: 'Credit code has already been used' }, { status: 400 });
+        }
+
+        // Check if credit code value is sufficient for the selected plan
+        if (credit.amount < plan.price) {
+            return NextResponse.json({
+                error: `Credit code value (₦${credit.amount.toLocaleString()}) is insufficient for ${plan.displayName} (₦${plan.price.toLocaleString()})`
+            }, { status: 400 });
+        }
+
+        // Validate Referral Code (Optional)
+        let upline = null;
+        if (referralCode) {
+            upline = await User.findOne({ referralCode });
+            if (!upline) {
+                return NextResponse.json({ error: 'Invalid referral code' }, { status: 400 });
+            }
+        }
+
+        // Hash password
         const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Generate own referral code
+        const newReferralCode = Math.random().toString(36).substring(2, 8).toUpperCase();
+
+        // Create User
         const newUser = await User.create({
             name,
             username,
             whatsapp,
-            email,
+            country,
+            countryCode,
             password: hashedPassword,
-            role: plan,
-            referralCode: username,
-            uplinerId: upliner ? upliner._id : null,
-            referralBalance: 0,
-            taskBalance: 0,
-            credits: 0,
+            referralCode: newReferralCode,
+            uplinerId: upline ? upline._id : null,
+            role: planName, // Set role based on plan (lite, pro, premium)
         });
 
-        // 7. Mark OTP as used
-        otp.status = "used";
-        otp.usedBy = newUser._id;
-        await otp.save();
+        // Mark Credit Code as used
+        credit.status = 'USED';
+        credit.usedBy = newUser._id.toString();
+        credit.usedAt = new Date();
+        await credit.save();
 
-        // 8. Process Referral Bonus
-        if (upliner) {
-            const bonusAmount = selectedPlan.referralReward;
-            upliner.referralBalance += bonusAmount;
-            await upliner.save();
+        // Handle Guider Commission (10% of plan price)
+        if (credit.guiderId) {
+            const guider = await User.findById(credit.guiderId);
+            if (guider && guider.role === 'guider') {
+                const commission = Math.floor(plan.price * 0.10); // 10% commission
+                guider.commissionBalance = (guider.commissionBalance || 0) + commission;
+                await guider.save();
+
+                // Create transaction record for guider commission
+                const { Transaction } = await import('@/lib/models');
+                await Transaction.create({
+                    userId: guider._id,
+                    type: 'signup_commission',
+                    amount: commission,
+                    balanceType: 'referral',
+                    description: `Guider commission (10%) from ${newUser.name}'s signup`,
+                    status: 'completed',
+                    metadata: {
+                        newUserId: newUser._id.toString(),
+                        creditCode: credit.code,
+                        planName: plan.name,
+                    },
+                });
+            }
         }
 
-        return NextResponse.json({ message: "Account created successfully", userId: newUser._id }, { status: 201 });
+        // Handle Upline Referral Commission (50% of plan price)
+        if (upline) {
+            const referralCommission = Math.floor(plan.price * 0.50); // 50% commission
+            upline.referralBalance = (upline.referralBalance || 0) + referralCommission;
+            await upline.save();
 
-    } catch (error: any) {
-        console.error("Signup Error:", error);
-        return NextResponse.json({ error: error.message || "Internal Server Error" }, { status: 500 });
+            // Create transaction record for upline commission
+            const { Transaction } = await import('@/lib/models');
+            await Transaction.create({
+                userId: upline._id,
+                type: 'referral_commission',
+                amount: referralCommission,
+                balanceType: 'referral',
+                description: `Referral commission (50%) from ${newUser.name}'s signup`,
+                status: 'completed',
+                metadata: {
+                    newUserId: newUser._id.toString(),
+                    referralCode: upline.referralCode,
+                    planName: plan.name,
+                },
+            });
+        }
+
+        // Generate JWT
+        const token = signJwt({ userId: newUser._id, role: newUser.role });
+
+        const response = NextResponse.json({
+            message: 'User registered successfully',
+            user: {
+                _id: newUser._id,
+                name: newUser.name,
+                username: newUser.username,
+                role: newUser.role,
+                referralCode: newUser.referralCode,
+            }
+        }, { status: 201 });
+
+        // Set Cookie
+        response.cookies.set('token', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            maxAge: 60 * 60 * 24 * 7, // 7 days
+            path: '/',
+        });
+
+        return response;
+
+    } catch (error) {
+        console.error('Signup error:', error);
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }
+

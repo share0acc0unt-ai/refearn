@@ -1,148 +1,214 @@
-"use client";
+'use client';
 
-import { useAuth } from "@/context/AuthContext";
-import { Copy, Users, CheckCircle, Ban } from "lucide-react";
-import { useState, useEffect } from "react";
-
-interface Referral {
-    id: string;
-    name: string;
-    username: string;
-    role: string;
-    joinedAt: string;
-    isSuspended: boolean;
-}
+import { useEffect, useState } from "react";
+import { formatUSD } from "@/lib/currency";
+import { Copy, Check } from "lucide-react";
 
 export default function ReferralsPage() {
-    const { user, token } = useAuth();
+    const [referrals, setReferrals] = useState<any[]>([]);
+    const [referralCode, setReferralCode] = useState('');
+    const [totalReferrals, setTotalReferrals] = useState(0);
     const [copied, setCopied] = useState(false);
-    const [referrals, setReferrals] = useState<Referral[]>([]);
     const [loading, setLoading] = useState(true);
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const perPage = 10;
 
     useEffect(() => {
-        if (token) {
-            fetchReferrals();
-        }
-    }, [token]);
+        fetchReferrals();
+    }, [page]);
 
     const fetchReferrals = async () => {
         try {
-            const res = await fetch("/api/user/referrals", {
-                headers: { "Authorization": `Bearer ${token}` }
-            });
-            const data = await res.json();
-            if (data.referrals) {
+            const response = await fetch(`/api/user/referrals?page=${page}&limit=${perPage}`);
+            if (response.ok) {
+                const data = await response.json();
                 setReferrals(data.referrals);
+                setReferralCode(data.referralCode);
+                setTotalReferrals(data.totalReferrals);
+                setTotalPages(data.totalPages || 1);
             }
-        } catch (error) {
-            console.error("Failed to fetch referrals", error);
+        } catch (err) {
+            console.error('Error fetching referrals:', err);
         } finally {
             setLoading(false);
         }
     };
 
-    const referralLink = typeof window !== "undefined" && user?.username
-        ? `${window.location.origin}/signup?ref=${user.username}`
-        : "Loading...";
-
-    const copyToClipboard = () => {
-        navigator.clipboard.writeText(referralLink);
+    const copyReferralLink = () => {
+        const link = `${window.location.origin}/signup?ref=${referralCode}`;
+        navigator.clipboard.writeText(link);
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
     };
 
-    const activeReferrals = referrals.filter(r => !r.isSuspended).length;
+    const copyReferralCode = () => {
+        navigator.clipboard.writeText(referralCode);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+    };
+
+    if (loading) {
+        return (
+            <div className="p-8 lg:p-12">
+                <div className="mx-auto max-w-7xl flex items-center justify-center h-64">
+                    <p className="text-white text-xl">Loading...</p>
+                </div>
+            </div>
+        );
+    }
 
     return (
-        <div className="space-y-6">
-            <h1 className="text-2xl font-bold text-white">My Referrals</h1>
-
-            {/* Referral Link Card */}
-            <div className="bg-white/5 border border-white/10 rounded-xl p-6">
-                <h2 className="text-lg font-semibold text-white mb-4">Your Referral Link</h2>
-                <div className="flex flex-col md:flex-row gap-4">
-                    <div className="flex-1 bg-black/20 border border-white/10 rounded-lg px-4 py-3 text-white/70 font-mono text-sm truncate">
-                        {referralLink}
+        <div className="p-8 lg:p-12">
+            <div className="mx-auto max-w-7xl">
+                {/* Page Heading */}
+                <div className="flex flex-wrap justify-between gap-3 mb-8">
+                    <div className="flex min-w-72 flex-col gap-2">
+                        <p className="text-white text-4xl font-black leading-tight tracking-[-0.033em]">My Referrals</p>
+                        <p className="text-[#92c9a0] text-base font-normal leading-normal">
+                            Earn 50% commission on every successful referral
+                        </p>
                     </div>
-                    <button
-                        onClick={copyToClipboard}
-                        className="bg-primary text-background-dark font-bold px-6 py-3 rounded-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
-                    >
-                        <Copy size={18} />
-                        {copied ? "Copied!" : "Copy Link"}
-                    </button>
-                </div>
-                <p className="mt-4 text-sm text-white/60">
-                    Share this link with your friends. You'll earn 50% of their plan fee when they sign up!
-                </p>
-            </div>
-
-            {/* Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-white/5 border border-white/10 rounded-xl p-6">
-                    <div className="text-white/60 text-sm mb-1">Total Referrals</div>
-                    <div className="text-2xl font-bold text-white">{referrals.length}</div>
-                </div>
-                <div className="bg-white/5 border border-white/10 rounded-xl p-6">
-                    <div className="text-white/60 text-sm mb-1">Active Referrals</div>
-                    <div className="text-2xl font-bold text-white">{activeReferrals}</div>
-                </div>
-                <div className="bg-white/5 border border-white/10 rounded-xl p-6">
-                    <div className="text-white/60 text-sm mb-1">Total Earnings</div>
-                    <div className="text-2xl font-bold text-primary">₦{user?.referralBalance?.toLocaleString() || 0}</div>
-                </div>
-            </div>
-
-            {/* Referral List */}
-            <div className="bg-white/5 border border-white/10 rounded-xl overflow-hidden">
-                <div className="p-6 border-b border-white/10">
-                    <h2 className="text-lg font-semibold text-white">Referral History</h2>
                 </div>
 
-                {loading ? (
-                    <div className="p-8 text-center text-white/40">Loading referrals...</div>
-                ) : referrals.length === 0 ? (
-                    <div className="p-8 text-center text-white/40">
-                        <Users className="mx-auto size-12 mb-3 opacity-50" />
-                        <p>No referrals yet. Start sharing your link!</p>
+                {/* Referral Code Card */}
+                <div className="mb-10 rounded-xl border border-white/10 bg-white/5 p-6">
+                    <h2 className="text-white text-xl font-bold mb-4">Your Referral Code</h2>
+                    <div className="flex flex-col gap-4">
+                        <div>
+                            <label className="text-white/70 text-sm mb-2 block">Referral Code</label>
+                            <div className="flex gap-2">
+                                <input
+                                    type="text"
+                                    value={referralCode}
+                                    readOnly
+                                    className="flex-1 rounded-lg border border-[#32673f] bg-[#102215] px-4 py-3 text-white font-mono text-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                                />
+                                <button
+                                    onClick={copyReferralCode}
+                                    className="flex items-center gap-2 rounded-lg bg-primary px-6 py-3 text-[#112215] font-bold hover:bg-primary/90 transition-colors"
+                                >
+                                    {copied ? <Check size={20} /> : <Copy size={20} />}
+                                    {copied ? 'Copied!' : 'Copy'}
+                                </button>
+                            </div>
+                        </div>
+                        <div>
+                            <label className="text-white/70 text-sm mb-2 block">Referral Link</label>
+                            <div className="flex gap-2">
+                                <input
+                                    type="text"
+                                    value={`${typeof window !== 'undefined' ? window.location.origin : ''}/signup?ref=${referralCode}`}
+                                    readOnly
+                                    className="flex-1 rounded-lg border border-[#32673f] bg-[#102215] px-4 py-3 text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                                />
+                                <button
+                                    onClick={copyReferralLink}
+                                    className="flex items-center gap-2 rounded-lg bg-[#23482c] px-6 py-3 text-white font-bold hover:bg-[#23482c]/80 transition-colors"
+                                >
+                                    {copied ? <Check size={20} /> : <Copy size={20} />}
+                                    {copied ? 'Copied!' : 'Copy'}
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                ) : (
-                    <table className="w-full text-left text-sm text-white/60">
-                        <thead className="bg-white/5 text-white font-bold uppercase text-xs">
-                            <tr>
-                                <th className="p-4">User</th>
-                                <th className="p-4">Role</th>
-                                <th className="p-4">Status</th>
-                                <th className="p-4">Joined</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-white/10">
-                            {referrals.map((ref) => (
-                                <tr key={ref.id} className="hover:bg-white/5 transition-colors">
-                                    <td className="p-4">
-                                        <div className="font-bold text-white">{ref.name}</div>
-                                        <div className="text-xs">@{ref.username}</div>
-                                    </td>
-                                    <td className="p-4">
-                                        <span className="capitalize px-2 py-1 bg-white/10 rounded text-xs">
-                                            {ref.role}
-                                        </span>
-                                    </td>
-                                    <td className="p-4">
-                                        {ref.isSuspended ? (
-                                            <span className="text-red-500 flex items-center gap-1"><Ban size={14} /> Suspended</span>
-                                        ) : (
-                                            <span className="text-green-500 flex items-center gap-1"><CheckCircle size={14} /> Active</span>
-                                        )}
-                                    </td>
-                                    <td className="p-4">
-                                        {new Date(ref.joinedAt).toLocaleDateString()}
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                )}
+                </div>
+
+                {/* Stats */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                    <div className="rounded-xl border border-white/10 bg-white/5 p-6">
+                        <p className="text-white/70 text-sm mb-1">Total Referrals</p>
+                        <p className="text-white text-3xl font-bold">{totalReferrals}</p>
+                    </div>
+                    <div className="rounded-xl border border-white/10 bg-white/5 p-6">
+                        <p className="text-white/70 text-sm mb-1">This Month</p>
+                        <p className="text-white text-3xl font-bold">
+                            {referrals.filter(r => {
+                                const date = new Date(r.createdAt);
+                                const now = new Date();
+                                return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
+                            }).length}
+                        </p>
+                    </div>
+                    <div className="rounded-xl border border-white/10 bg-white/5 p-6">
+                        <p className="text-white/70 text-sm mb-1">Commission Rate</p>
+                        <p className="text-primary text-3xl font-bold">50%</p>
+                    </div>
+                </div>
+
+                {/* Referrals Table */}
+                <div>
+                    <h2 className="text-white text-[22px] font-bold leading-tight tracking-[-0.015em] mb-4">
+                        Your Referral Network
+                    </h2>
+                    {referrals.length === 0 ? (
+                        <div className="rounded-xl border border-white/10 bg-white/5 p-12 text-center">
+                            <span className="material-symbols-outlined text-white/30 text-6xl mb-4 block">groups</span>
+                            <p className="text-white/70 text-lg mb-2">No referrals yet</p>
+                            <p className="text-white/50 text-sm">Share your referral code to start earning commissions!</p>
+                        </div>
+                    ) : (
+                        <div className="rounded-xl border border-white/10 bg-white/5 overflow-hidden">
+                            <div className="overflow-x-auto">
+                                <table className="w-full">
+                                    <thead className="border-b border-white/10">
+                                        <tr>
+                                            <th className="text-left p-4 text-white/70 font-medium">Name</th>
+                                            <th className="text-left p-4 text-white/70 font-medium">Username</th>
+                                            <th className="text-left p-4 text-white/70 font-medium">Plan</th>
+                                            <th className="text-left p-4 text-white/70 font-medium">Joined</th>
+                                            <th className="text-left p-4 text-white/70 font-medium">Total Balance</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {referrals.map((referral) => (
+                                            <tr key={referral._id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
+                                                <td className="p-4 text-white">{referral.name}</td>
+                                                <td className="p-4 text-white/80">@{referral.username}</td>
+                                                <td className="p-4">
+                                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/20 text-primary capitalize">
+                                                        {referral.role}
+                                                    </span>
+                                                </td>
+                                                <td className="p-4 text-white/70">
+                                                    {new Date(referral.createdAt).toLocaleDateString()}
+                                                </td>
+                                                <td className="p-4 text-primary font-medium">
+                                                    {formatUSD(referral.referralBalance + referral.taskBalance)}
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            {/* Pagination */}
+                            {totalPages > 1 && (
+                                <div className="flex justify-between items-center px-4 pb-4">
+                                    <p className="text-white/60 text-sm">
+                                        Page {page} of {totalPages}
+                                    </p>
+                                    <div className="flex gap-2">
+                                        <button
+                                            onClick={() => setPage(p => Math.max(1, p - 1))}
+                                            disabled={page === 1}
+                                            className="px-4 py-2 rounded-lg bg-[#193320] border border-[#32673f] text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#23482c] transition-colors"
+                                        >
+                                            Previous
+                                        </button>
+                                        <button
+                                            onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                                            disabled={page === totalPages}
+                                            className="px-4 py-2 rounded-lg bg-[#193320] border border-[#32673f] text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#23482c] transition-colors"
+                                        >
+                                            Next
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );

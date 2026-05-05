@@ -1,136 +1,141 @@
-"use client";
+'use client';
 
-import { useAuth } from "@/context/AuthContext";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { formatUSD } from "@/lib/currency";
+import { useRouter } from "next/navigation";
 
 export default function SettingsPage() {
-    const { user, token, refreshUser } = useAuth();
-    const [loading, setLoading] = useState(false);
-    const [message, setMessage] = useState("");
-    const [error, setError] = useState("");
+    const router = useRouter();
+    const [user, setUser] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
 
-    const [formData, setFormData] = useState({
-        whatsapp: "",
-        profilePhoto: "",
-    });
-
-    // Sync form with user data when user loads
     useEffect(() => {
-        if (user) {
-            setFormData({
-                whatsapp: user.whatsapp || "",
-                profilePhoto: user.profilePhoto || "",
-            });
-        }
-    }, [user]);
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setLoading(true);
-        setMessage("");
-        setError("");
-
-        try {
-            const res = await fetch("/api/user/settings", {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                },
-                body: JSON.stringify(formData),
-            });
-
-            const data = await res.json();
-
-            if (!res.ok) {
-                throw new Error(data.error || "Failed to update profile");
+        const fetchUser = async () => {
+            try {
+                const response = await fetch('/api/auth/me');
+                if (response.ok) {
+                    const data = await response.json();
+                    setUser(data.user);
+                }
+            } catch (err) {
+                console.error('Error fetching user:', err);
+            } finally {
+                setLoading(false);
             }
+        };
 
-            setMessage("Profile updated successfully!");
-            // Refresh user context to reflect changes
-            await refreshUser();
-        } catch (err: any) {
-            setError(err.message || "Something went wrong");
-        } finally {
-            setLoading(false);
-        }
-    };
+        fetchUser();
+    }, []);
+
+    if (loading) {
+        return (
+            <div className="p-8 lg:p-12">
+                <div className="mx-auto max-w-7xl flex items-center justify-center h-64">
+                    <p className="text-white text-xl">Loading...</p>
+                </div>
+            </div>
+        );
+    }
 
     return (
-        <div className="max-w-2xl">
-            <h1 className="text-2xl font-bold text-white mb-6">Account Settings</h1>
-
-            {message && (
-                <div className="mb-6 p-4 bg-green-500/10 border border-green-500/20 rounded-lg text-green-400 text-sm">
-                    {message}
-                </div>
-            )}
-
-            {error && (
-                <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm">
-                    {error}
-                </div>
-            )}
-
-            <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Read Only Fields */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label className="block text-sm font-medium text-white/70 mb-1">Full Name</label>
-                        <input
-                            type="text"
-                            value={user?.name || ""}
-                            disabled
-                            className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white/50 cursor-not-allowed"
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-white/70 mb-1">Username (Referral Code)</label>
-                        <input
-                            type="text"
-                            value={user?.username || ""}
-                            disabled
-                            className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white/50 cursor-not-allowed"
-                        />
+        <div className="p-8 lg:p-12">
+            <div className="mx-auto max-w-4xl">
+                {/* Page Heading */}
+                <div className="flex flex-wrap justify-between gap-3 mb-8">
+                    <div className="flex min-w-72 flex-col gap-2">
+                        <p className="text-white text-4xl font-black leading-tight tracking-[-0.033em]">Account Settings</p>
+                        <p className="text-[#92c9a0] text-base font-normal leading-normal">
+                            Manage your account preferences
+                        </p>
                     </div>
                 </div>
 
-                {/* Editable Fields */}
-                <div>
-                    <label className="block text-sm font-medium text-white/70 mb-1">WhatsApp Number</label>
-                    <input
-                        type="text"
-                        name="whatsapp"
-                        value={formData.whatsapp}
-                        onChange={handleChange}
-                        className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-primary outline-none transition-colors"
-                    />
-                </div>
+                <div className="flex flex-col gap-6">
+                    {/* Profile Information */}
+                    <div className="rounded-xl border border-white/10 bg-white/5 p-6">
+                        <h2 className="text-white text-xl font-bold mb-4">Profile Information</h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label className="text-white/70 text-sm">Full Name</label>
+                                <p className="text-white font-medium">{user?.name}</p>
+                            </div>
+                            <div>
+                                <label className="text-white/70 text-sm">Username</label>
+                                <p className="text-white font-medium">@{user?.username}</p>
+                            </div>
+                            <div>
+                                <label className="text-white/70 text-sm">WhatsApp Number</label>
+                                <p className="text-white font-medium">{user?.whatsapp}</p>
+                            </div>
+                            <div>
+                                <label className="text-white/70 text-sm">Role</label>
+                                <p className="text-white font-medium capitalize">{user?.role}</p>
+                            </div>
+                        </div>
+                    </div>
 
-                <div>
-                    <label className="block text-sm font-medium text-white/70 mb-1">Profile Photo URL</label>
-                    <input
-                        type="text"
-                        name="profilePhoto"
-                        value={formData.profilePhoto}
-                        onChange={handleChange}
-                        className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-primary outline-none transition-colors"
-                        placeholder="https://..."
-                    />
-                </div>
+                    {/* Account Details */}
+                    <div className="rounded-xl border border-white/10 bg-white/5 p-6">
+                        <h2 className="text-white text-xl font-bold mb-4">Account Details</h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label className="text-white/70 text-sm">Referral Code</label>
+                                <p className="text-primary font-mono font-bold text-lg">{user?.referralCode}</p>
+                            </div>
+                            <div>
+                                <label className="text-white/70 text-sm">Account Status</label>
+                                <p className={`font-medium ${user?.suspended ? 'text-red-500' : 'text-green-500'}`}>
+                                    {user?.suspended ? 'Suspended' : 'Active'}
+                                </p>
+                            </div>
+                            <div>
+                                <label className="text-white/70 text-sm">Member Since</label>
+                                <p className="text-white font-medium">
+                                    {user?.createdAt && new Date(user.createdAt).toLocaleDateString()}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
 
-                <button
-                    type="submit"
-                    disabled={loading}
-                    className="bg-primary text-background-dark font-bold px-8 py-3 rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50"
-                >
-                    {loading ? "Saving..." : "Save Changes"}
-                </button>
-            </form>
+                    {/* Balances */}
+                    <div className="rounded-xl border border-white/10 bg-white/5 p-6">
+                        <h2 className="text-white text-xl font-bold mb-4">Balances</h2>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div className="rounded-lg bg-white/5 p-4">
+                                <label className="text-white/70 text-sm">Credits</label>
+                                <p className="text-primary text-2xl font-bold">{user?.credits?.toLocaleString() || 0}</p>
+                            </div>
+                            <div className="rounded-lg bg-white/5 p-4">
+                                <label className="text-white/70 text-sm">Referral Balance</label>
+                                <p className="text-primary text-2xl font-bold">{formatUSD(user?.referralBalance || 0)}</p>
+                            </div>
+                            <div className="rounded-lg bg-white/5 p-4">
+                                <label className="text-white/70 text-sm">Task Balance</label>
+                                <p className="text-primary text-2xl font-bold">{formatUSD(user?.taskBalance || 0)}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Quick Actions */}
+                    <div className="rounded-xl border border-white/10 bg-white/5 p-6">
+                        <h2 className="text-white text-xl font-bold mb-4">Quick Actions</h2>
+                        <div className="flex flex-col gap-3">
+                            <button className="text-left px-4 py-3 rounded-lg bg-white/5 text-white hover:bg-white/10 transition-colors">
+                                <span className="font-medium">Change Password</span>
+                                <p className="text-white/60 text-sm">Update your account password</p>
+                            </button>
+                            <button className="text-left px-4 py-3 rounded-lg bg-white/5 text-white hover:bg-white/10 transition-colors">
+                                <span className="font-medium">Update WhatsApp Number</span>
+                                <p className="text-white/60 text-sm">Change your contact information</p>
+                            </button>
+                            <button className="text-left px-4 py-3 rounded-lg bg-red-500/20 text-red-500 hover:bg-red-500/30 transition-colors">
+                                <span className="font-medium">Request Account Deletion</span>
+                                <p className="text-red-500/80 text-sm">Permanently delete your account</p>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }
