@@ -50,13 +50,14 @@ export async function POST(req: Request) {
             }, { status: 400 });
         }
 
-        // Validate Referral Code (Optional)
+        // Validate Referral Code (Optional, defaults to GUIDER)
         let upline = null;
-        if (referralCode) {
-            upline = await User.findOne({ referralCode: referralCode.toUpperCase() });
-            if (!upline) {
-                return NextResponse.json({ error: 'Invalid referral code' }, { status: 400 });
-            }
+        const refCode = referralCode || 'GUIDER';
+        
+        upline = await User.findOne({ referralCode: refCode.toUpperCase() });
+        if (!upline && referralCode) {
+            // Only return error if user actually typed an invalid code
+            return NextResponse.json({ error: 'Invalid referral code' }, { status: 400 });
         }
 
         // Hash password
