@@ -12,7 +12,9 @@ interface Guider {
     profilePhoto?: string;
     createdAt: string;
     successfulTransactions: number;
-    totalValue: number;
+    rating: number;
+    responseTime: string;
+    isOnline: boolean;
 }
 
 export default function BrowseGuidersPage() {
@@ -185,17 +187,30 @@ export default function BrowseGuidersPage() {
 
                                             {/* Stats */}
                                             <div className="flex flex-col gap-2">
-                                                <div className="flex items-center gap-2">
-                                                    <span className="material-symbols-outlined text-primary text-sm">check_circle</span>
-                                                    <span className="text-white/80 text-sm">
-                                                        {guider.successfulTransactions} successful transactions
-                                                    </span>
+                                                <div className="flex items-center justify-between text-sm">
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="material-symbols-outlined text-primary text-sm">check_circle</span>
+                                                        <span className="text-white/80">
+                                                            {guider.successfulTransactions} deals
+                                                        </span>
+                                                    </div>
+                                                    <div className="flex items-center gap-1 text-yellow-400">
+                                                        <span className="material-symbols-outlined text-sm">star</span>
+                                                        <span className="font-bold">{guider.rating.toFixed(1)}</span>
+                                                    </div>
                                                 </div>
-                                                <div className="flex items-center gap-2">
-                                                    <span className="material-symbols-outlined text-primary text-sm">payments</span>
-                                                    <span className="text-white/80 text-sm">
-                                                        Total value: {formatUSD(guider.totalValue)}
-                                                    </span>
+                                                
+                                                <div className="flex items-center justify-between text-xs pt-1">
+                                                    <div className="flex items-center gap-2 text-white/50">
+                                                        <span className="material-symbols-outlined text-sm">schedule</span>
+                                                        <span>Response: {guider.responseTime}</span>
+                                                    </div>
+                                                    <div className="flex items-center gap-1">
+                                                        <div className={`size-2 rounded-full ${guider.isOnline ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]' : 'bg-gray-500'}`}></div>
+                                                        <span className={guider.isOnline ? 'text-green-400 font-medium' : 'text-white/30'}>
+                                                            {guider.isOnline ? 'Active Now' : 'Offline'}
+                                                        </span>
+                                                    </div>
                                                 </div>
                                             </div>
 

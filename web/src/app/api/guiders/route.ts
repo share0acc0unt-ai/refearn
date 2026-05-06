@@ -25,8 +25,9 @@ export async function GET(request: NextRequest) {
             profilePhoto: guider.avatar,
             createdAt: guider.createdAt,
             successfulTransactions: guider.totalTransactions || 0,
-            // Calculate total value dynamically using the DB rate (assuming average 10 USD per transaction)
-            totalValue: (guider.totalTransactions || 0) * (rate * 10)
+            rating: guider.rating || 5.0,
+            responseTime: guider.responseTime || '< 5 mins',
+            isOnline: guider.isOnline || false,
         }));
 
         // Sort by successful transactions (descending)

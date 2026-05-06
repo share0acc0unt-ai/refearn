@@ -90,7 +90,7 @@ export default function Home() {
                     <div className="w-[1.5px] bg-[#32673f] h-2 grow"></div>
                   </div>
                   <div className="flex flex-1 flex-col py-3">
-                    <p className="text-white text-lg font-medium leading-normal">Sign Up for Free</p>
+                    <p className="text-white text-lg font-medium leading-normal">Sign Up</p>
                     <p className="text-[#92c9a0] text-base font-normal leading-normal">Create your account in just a few clicks and get instant access to the platform.</p>
                   </div>
                   <div className="flex flex-col items-center gap-1">

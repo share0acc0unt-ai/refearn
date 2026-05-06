@@ -21,6 +21,9 @@ const UserSchema = new Schema({
     credits: { type: Number, default: 0 },
     commissionBalance: { type: Number, default: 0 }, // For guiders' commission earnings
     isSuspended: { type: Boolean, default: false },
+    rating: { type: Number, default: 4.5 }, // Average rating (1-5)
+    responseTime: { type: String, default: '< 10 mins' }, // Average response time
+    lastActive: { type: Date, default: Date.now },
 }, { timestamps: true });
 
 // OTP Token Schema
