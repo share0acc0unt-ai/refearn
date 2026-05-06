@@ -390,7 +390,12 @@ function SignupContent() {
                                             {creditCodeMessage}
                                         </p>
                                     )}
-                                    <p className="text-white/50 text-xs">Contact a guider to obtain a credit code</p>
+                                    <p className="text-white/50 text-xs">
+                                        Contact a guider to obtain a credit code. {' '}
+                                        <Link href="/browse-guiders" className="text-primary hover:underline font-bold">
+                                            Get SignUp Credit from Guider
+                                        </Link>
+                                    </p>
                                 </div>
 
                                 <div className="flex flex-col gap-2">
