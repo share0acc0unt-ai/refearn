@@ -4,7 +4,7 @@ import { LandingPageNavbar } from "@/components/LandingPageNavbar";
 
 export default function Home() {
   return (
-    <div className="relative flex h-auto min-h-screen w-full flex-col bg-background-light dark:bg-background-dark group/design-root overflow-x-hidden font-display">
+    <div className="relative flex h-auto min-h-screen w-full flex-col bg-background group/design-root overflow-x-hidden font-display">
       <div className="layout-container flex h-full grow flex-col">
         <div className="px-4 md:px-10 lg:px-20 xl:px-40 flex flex-1 justify-center py-5">
           <div className="layout-content-container flex flex-col max-w-[960px] flex-1">
@@ -17,8 +17,8 @@ export default function Home() {
                 <div className="flex flex-col gap-6 px-4 py-10 @[480px]:gap-8 @[864px]:flex-row">
                   <div className="flex flex-col gap-6 @[480px]:min-w-[400px] @[480px]:gap-8 @[864px]:justify-center">
                     <div className="flex flex-col gap-2 text-left">
-                      <h1 className="text-white text-4xl font-black leading-tight tracking-[-0.033em] @[480px]:text-5xl @[480px]:font-black @[480px]:leading-tight @[480px]:tracking-[-0.033em]">Advertise on real people's screen</h1>
-                      <h2 className="text-white/80 text-sm font-normal leading-normal @[480px]:text-base @[480px]:font-normal @[480px]:leading-normal">Facts: People only buy from people they know, like or trust. Reach millions of potential customers, Join Paypulse and start advertising today.</h2>
+                      <h1 className="text-foreground text-4xl font-black leading-tight tracking-[-0.033em] @[480px]:text-5xl @[480px]:font-black @[480px]:leading-tight @[480px]:tracking-[-0.033em]">Advertise on real people's screen</h1>
+                      <h2 className="text-muted-foreground text-sm font-normal leading-normal @[480px]:text-base @[480px]:font-normal @[480px]:leading-normal">Facts: People only buy from people they know, like or trust. Reach millions of potential customers, Join Paypulse and start advertising today.</h2>
                     </div>
                     <Link href="/advertise">
                       <button className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 @[480px]:h-12 @[480px]:px-5 bg-primary text-[#112215] text-sm font-bold leading-normal tracking-[0.015em] @[480px]:text-base @[480px]:font-bold @[480px]:leading-normal @[480px]:tracking-[0.015em]">
@@ -35,10 +35,10 @@ export default function Home() {
               <div className="px-4">
                 <div className="bg-primary/10 border border-primary/20 rounded-2xl p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-8 shadow-[0_0_40px_rgba(46,176,91,0.1)]">
                   <div className="flex flex-col gap-4 max-w-2xl">
-                    <h2 className="text-white text-2xl md:text-3xl font-bold leading-tight">
+                    <h2 className="text-foreground text-2xl md:text-3xl font-bold leading-tight">
                       Make Money Every Day
                     </h2>
-                    <p className="text-[#92c9a0] text-base md:text-lg font-medium leading-relaxed">
+                    <p className="text-muted-foreground text-base md:text-lg font-medium leading-relaxed">
                       Earn Up To $5 USD Per task, Earn commissions, Turn your connections into cash and earn a 50% on Referral Bonus. Join our network and start building your financial future today.
                     </p>
                   </div>
@@ -53,8 +53,8 @@ export default function Home() {
               {/* FeatureSection */}
               <div id="features" className="flex flex-col gap-10 px-4 py-10 @container">
                 <div className="flex flex-col gap-4 text-center items-center">
-                  <h1 className="text-white tracking-light text-[32px] font-bold leading-tight @[480px]:text-4xl @[480px]:font-black @[480px]:leading-tight @[480px]:tracking-[-0.033em] max-w-[720px]">Unlock Your Earning Potential</h1>
-                  <p className="text-white/80 text-base font-normal leading-normal max-w-[720px]">Discover the core pillars of the Paypulse platform designed to help you succeed.</p>
+                  <h1 className="text-foreground tracking-light text-[32px] font-bold leading-tight @[480px]:text-4xl @[480px]:font-black @[480px]:leading-tight @[480px]:tracking-[-0.033em] max-w-[720px]">Unlock Your Earning Potential</h1>
+                  <p className="text-muted-foreground text-base font-normal leading-normal max-w-[720px]">Discover the core pillars of the Paypulse platform designed to help you succeed.</p>
                 </div>
                 <div className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-4 p-0">
                   
@@ -83,15 +83,15 @@ export default function Home() {
               </div>
               {/* How It Works Section */}
               <div className="flex flex-col gap-4">
-                <h2 className="text-white text-center text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">How It Works</h2>
+                <h2 className="text-foreground text-center text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">How It Works</h2>
                 <div className="grid grid-cols-[40px_1fr] gap-x-2 px-4">
                   <div className="flex flex-col items-center gap-1 pt-3">
                     <div className="text-primary"><span className="material-symbols-outlined text-3xl">how_to_reg</span></div>
                     <div className="w-[1.5px] bg-[#32673f] h-2 grow"></div>
                   </div>
                   <div className="flex flex-1 flex-col py-3">
-                    <p className="text-white text-lg font-medium leading-normal">Sign Up</p>
-                    <p className="text-[#92c9a0] text-base font-normal leading-normal">Create your account in just a few clicks and get instant access to the platform.</p>
+                    <p className="text-foreground text-lg font-medium leading-normal">Sign Up</p>
+                    <p className="text-muted-foreground text-base font-normal leading-normal">Create your account in just a few clicks and get instant access to the platform.</p>
                   </div>
                   <div className="flex flex-col items-center gap-1">
                     <div className="w-[1.5px] bg-[#32673f] h-2"></div>
@@ -99,24 +99,24 @@ export default function Home() {
                     <div className="w-[1.5px] bg-[#32673f] h-2 grow"></div>
                   </div>
                   <div className="flex flex-1 flex-col py-3">
-                    <p className="text-white text-lg font-medium leading-normal">Earn &amp; Advertise</p>
-                    <p className="text-[#92c9a0] text-base font-normal leading-normal">Start referring users and completing tasks, or launch your first ad campaign.</p>
+                    <p className="text-foreground text-lg font-medium leading-normal">Earn &amp; Advertise</p>
+                    <p className="text-muted-foreground text-base font-normal leading-normal">Start referring users and completing tasks, or launch your first ad campaign.</p>
                   </div>
                   <div className="flex flex-col items-center gap-1 pb-3">
                     <div className="w-[1.5px] bg-[#32673f] h-2"></div>
                     <div className="text-primary"><span className="material-symbols-outlined text-3xl">payments</span></div>
                   </div>
                   <div className="flex flex-1 flex-col py-3">
-                    <p className="text-white text-lg font-medium leading-normal">Get Paid Securely</p>
-                    <p className="text-[#92c9a0] text-base font-normal leading-normal">Easily withdraw your earnings or reinvest your credits for further growth.</p>
+                    <p className="text-foreground text-lg font-medium leading-normal">Get Paid Securely</p>
+                    <p className="text-muted-foreground text-base font-normal leading-normal">Easily withdraw your earnings or reinvest your credits for further growth.</p>
                   </div>
                 </div>
               </div>
               {/* Pricing Table */}
               <div id="pricing" className="flex flex-col gap-10 px-4 py-10 @container">
                 <div className="flex flex-col gap-4 text-center items-center">
-                  <h1 className="text-white tracking-light text-[32px] font-bold leading-tight @[480px]:text-4xl @[480px]:font-black @[480px]:leading-tight @[480px]:tracking-[-0.033em] max-w-[720px]">Choose Your Plan</h1>
-                  <p className="text-white/80 text-base font-normal leading-normal max-w-[720px]">Start for free or unlock powerful features with our Pro and Business plans.</p>
+                  <h1 className="text-foreground tracking-light text-[32px] font-bold leading-tight @[480px]:text-4xl @[480px]:font-black @[480px]:leading-tight @[480px]:tracking-[-0.033em] max-w-[720px]">Choose Your Plan</h1>
+                  <p className="text-muted-foreground text-base font-normal leading-normal max-w-[720px]">Start for free or unlock powerful features with our Pro and Business plans.</p>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   {/* Free Plan */}
@@ -175,7 +175,7 @@ export default function Home() {
               {/* Testimonial Section */}
               <div className="flex flex-col gap-10 px-4 py-10 @container">
                 <div className="flex flex-col gap-4 text-center items-center">
-                  <h1 className="text-white tracking-light text-[32px] font-bold leading-tight @[480px]:text-4xl @[480px]:font-black @[480px]:leading-tight @[480px]:tracking-[-0.033em] max-w-[720px]">What Our Users Say</h1>
+                  <h1 className="text-foreground tracking-light text-[32px] font-bold leading-tight @[480px]:text-4xl @[480px]:font-black @[480px]:leading-tight @[480px]:tracking-[-0.033em] max-w-[720px]">What Our Users Say</h1>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="flex flex-col gap-4 rounded-lg border border-[#32673f] bg-[#193320] p-6">
@@ -204,11 +204,11 @@ export default function Home() {
               <footer className="border-t border-solid border-white/10 dark:border-b-[#23482c] px-4 md:px-10 py-10">
                 <div className="flex flex-col md:flex-row justify-between items-center gap-6">
                   <div className="flex items-center gap-2">
-                    <p className="text-white/60 text-sm">© 2024 Paypulse. All rights reserved.</p>
+                    <p className="text-muted-foreground text-sm">© 2024 Paypulse. All rights reserved.</p>
                   </div>
                   <div className="flex items-center gap-6">
-                    <Link className="text-white/80 text-sm hover:text-primary" href="#">Terms of Service</Link>
-                    <Link className="text-white/80 text-sm hover:text-primary" href="#">Privacy Policy</Link>
+                    <Link className="text-muted-foreground text-sm hover:text-primary" href="#">Terms of Service</Link>
+                    <Link className="text-muted-foreground text-sm hover:text-primary" href="#">Privacy Policy</Link>
                   </div>
                 </div>
               </footer>

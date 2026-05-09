@@ -11,8 +11,8 @@ export function LandingPageNavbar() {
     const closeMenu = () => setIsMenuOpen(false);
 
     return (
-        <header className="relative flex items-center justify-between whitespace-nowrap border-b border-solid border-white/10 dark:border-b-[#23482c] px-4 md:px-10 py-3 bg-[#102215]">
-            <div className="flex items-center gap-4 text-white">
+        <header className="relative flex items-center justify-between whitespace-nowrap border-b border-solid border-foreground/10 dark:border-b-[#23482c] px-4 md:px-10 py-3 bg-background">
+            <div className="flex items-center gap-4 text-foreground">
                 <div className="size-6 text-primary">
                     <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
                         <g clipPath="url(#clip0_6_543)">
@@ -34,7 +34,7 @@ export function LandingPageNavbar() {
                         </defs>
                     </svg>
                 </div>
-                <h2 className="text-white text-lg font-bold leading-tight tracking-[-0.015em]">
+                <h2 className="text-foreground text-lg font-bold leading-tight tracking-[-0.015em]">
                     Paypulse
                 </h2>
             </div>
@@ -42,24 +42,21 @@ export function LandingPageNavbar() {
             {/* Desktop Links */}
             <div className="hidden md:flex flex-1 justify-end gap-8">
                 <div className="flex items-center gap-9">
-                    <Link className="text-white text-sm font-medium leading-normal hover:text-primary transition-colors" href="/advertise">
+                    <Link className="text-foreground text-sm font-medium leading-normal hover:text-primary transition-colors" href="/advertise">
                         Advertise
                     </Link>
                     <Link
-                        className="text-white text-sm font-medium leading-normal hover:text-primary transition-colors"
+                        className="text-foreground text-sm font-medium leading-normal hover:text-primary transition-colors"
                         href="/browse-guiders"
                     >
                         Browse Guiders
                     </Link>
-                    <Link className="text-white text-sm font-medium leading-normal hover:text-primary transition-colors" href="/rates">
+                    <Link className="text-foreground text-sm font-medium leading-normal hover:text-primary transition-colors" href="/rates">
                         Rates
                     </Link>
-                    <Link className="text-white text-sm font-medium leading-normal hover:text-primary transition-colors" href="#pricing">
+                    <Link className="text-foreground text-sm font-medium leading-normal hover:text-primary transition-colors" href="#pricing">
                         Pricing
                     </Link>
-                    {/* <Link className="text-white text-sm font-medium leading-normal hover:text-primary transition-colors" href="#about">
-                        About
-                    </Link> */}
                 </div>
                 <div className="flex gap-2">
                     <Link href="/signup">
@@ -69,7 +66,7 @@ export function LandingPageNavbar() {
                         </button>
                     </Link>
                     <Link href="/login">
-                        <button className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-[#23482c] text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-[#23482c]/80 transition-colors">
+                        <button className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-foreground text-background text-sm font-bold leading-normal tracking-[0.015em] hover:opacity-90 transition-opacity">
                             <span className="truncate">Login</span>
                         </button>
                     </Link>
@@ -78,7 +75,7 @@ export function LandingPageNavbar() {
 
             {/* Mobile Menu Toggle */}
             <button
-                className="md:hidden text-white p-2"
+                className="md:hidden text-foreground p-2"
                 onClick={toggleMenu}
                 aria-label="Toggle menu"
             >
@@ -87,41 +84,34 @@ export function LandingPageNavbar() {
 
             {/* Mobile Menu Overlay */}
             {isMenuOpen && (
-                <div className="absolute top-full left-0 w-full bg-[#102215] border-b border-white/10 flex flex-col p-4 gap-4 z-50 animate-in slide-in-from-top-2 duration-200 shadow-xl">
+                <div className="absolute top-full left-0 w-full bg-background border-b border-foreground/10 flex flex-col p-4 gap-4 z-50 animate-in slide-in-from-top-2 duration-200 shadow-xl">
                     <Link
-                        className="text-white text-base font-medium py-2 hover:text-primary border-b border-white/5"
+                        className="text-foreground text-base font-medium py-2 hover:text-primary border-b border-foreground/5"
                         href="/advertise"
                         onClick={closeMenu}
                     >
                         Advertise
                     </Link>
                     <Link
-                        className="text-white text-base font-medium py-2 hover:text-primary border-b border-white/5"
+                        className="text-foreground text-base font-medium py-2 hover:text-primary border-b border-foreground/5"
                         href="/browse-guiders"
                         onClick={closeMenu}
                     >
                         Browse Guiders
                     </Link>
                     <Link
-                        className="text-white text-base font-medium py-2 hover:text-primary border-b border-white/5"
+                        className="text-foreground text-base font-medium py-2 hover:text-primary border-b border-foreground/5"
                         href="/rates"
                         onClick={closeMenu}
                     >
                         Rates
                     </Link>
                     <Link
-                        className="text-white text-base font-medium py-2 hover:text-primary border-b border-white/5"
+                        className="text-foreground text-base font-medium py-2 hover:text-primary border-b border-foreground/5"
                         href="#pricing"
                         onClick={closeMenu}
                     >
                         Pricing
-                    </Link>
-                    <Link
-                        className="text-white text-base font-medium py-2 hover:text-primary border-b border-white/5"
-                        href="#about"
-                        onClick={closeMenu}
-                    >
-                        About
                     </Link>
 
                     <div className="flex flex-col gap-3 mt-2">
@@ -132,13 +122,14 @@ export function LandingPageNavbar() {
                             </button>
                         </Link>
                         <Link href="/login" onClick={closeMenu} className="w-full">
-                            <button className="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-4 bg-[#23482c] text-white text-base font-bold leading-normal tracking-[0.015em]">
+                            <button className="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-4 bg-foreground text-background text-base font-bold leading-normal tracking-[0.015em]">
                                 <span className="truncate">Login</span>
                             </button>
                         </Link>
                     </div>
                 </div>
             )}
+
         </header>
     );
 }
